@@ -1,0 +1,43 @@
+<view class="container">
+  <view wx:if="{{person}}" class="card person-card">
+    <!-- 基本信息 -->
+    <view class="header">
+      <view class="avatar {{person.gender === '女' ? 'female' : ''}}">
+        {{person.gender === '男' ? '👨' : person.gender === '女' ? '👩' : '👤'}}
+      </view>
+      <view class="info">
+        <view class="name">{{person.name}}</view>
+        <view class="meta text-muted">世代 {{person.generation}} · {{person.gender}}</view>
+      </view>
+    </view>
+
+    <!-- 父母 -->
+    <view wx:if="{{person.father || person.mother}}" class="section">
+      <view class="section-title">父母</view>
+      <view wx:if="{{person.father}}" class="relation-item" bindtap="goToPerson" data-id="{{person.father.id}}">
+        <text>👨 父亲：{{person.father.name}}</text>
+      </view>
+      <view wx:if="{{person.mother}}" class="relation-item" bindtap="goToPerson" data-id="{{person.mother.id}}">
+        <text>👩 母亲：{{person.mother.name}}</text>
+      </view>
+    </view>
+
+    <!-- 配偶 -->
+    <view wx:if="{{person.spouse}}" class="section">
+      <view class="section-title">配偶</view>
+      <view class="relation-item" bindtap="goToPerson" data-id="{{person.spouse.id}}">
+        <text>💑 {{person.spouse.name}}</text>
+      </view>
+    </view>
+
+    <!-- 子女 -->
+    <view wx:if="{{person.children && person.children.length > 0}}" class="section">
+      <view class="section-title">子女 ({{person.children.length}}人)</view>
+      <view wx:for="{{person.children}}" wx:key="id" class="relation-item" bindtap="goToPerson" data-id="{{item.id}}">
+        <text>{{item.gender === '男' ? '👦' : '👧'}} {{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="loading">加载中...</view>
+</view>

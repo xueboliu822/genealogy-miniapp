@@ -1,0 +1,38 @@
+.form {
+  padding: 20rpx 0;
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.input {
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+}
+
+.radio-item {
+  margin-right: 40rpx;
+  font-size: 32rpx;
+}
+
+.picker {
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+  background: #fff;
+}
+
+.btn-primary {
+  margin-top: 60rpx;
+  width: 100%;
+}

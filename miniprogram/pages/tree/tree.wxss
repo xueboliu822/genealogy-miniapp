@@ -1,0 +1,67 @@
+.title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #8B4513;
+  margin-bottom: 30rpx;
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+}
+
+.root-node {
+  background: linear-gradient(135deg, #8B4513, #a0522d);
+  color: #fff;
+}
+
+.root-node .node-info {
+  color: rgba(255,255,255,0.8);
+}
+
+.node {
+  position: relative;
+  padding-left: 40rpx;
+}
+
+.tree-branch {
+  position: relative;
+  margin-left: 30rpx;
+}
+
+.connector {
+  position: absolute;
+  left: 0;
+  top: -20rpx;
+  width: 30rpx;
+  height: 60rpx;
+  border-left: 4rpx solid #d4c4b0;
+  border-bottom: 4rpx solid #d4c4b0;
+  border-radius: 0 0 0 20rpx;
+}
+
+.node-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.node-name.female {
+  color: #e07a5f;
+}
+
+.node-badge {
+  font-size: 22rpx;
+  background: #f0e6d8;
+  color: #8B4513;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.children-label {
+  font-size: 28rpx;
+  color: #999;
+  margin: 30rpx 0 20rpx;
+  padding-left: 20rpx;
+}

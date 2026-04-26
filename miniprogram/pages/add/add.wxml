@@ -1,0 +1,38 @@
+<view class="container">
+  <view class="form">
+    <view class="form-item">
+      <view class="label">姓名 *</view>
+      <input class="input" placeholder="请输入姓名" value="{{name}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="form-item">
+      <view class="label">性别</view>
+      <radio-group bindchange="onGenderChange">
+        <label class="radio-item"><radio value="男" checked="{{gender === '男'}}" /> 男</label>
+        <label class="radio-item"><radio value="女" checked="{{gender === '女'}}" /> 女</label>
+        <label class="radio-item"><radio value="其他" checked="{{gender === '其他'}}" /> 其他</label>
+      </radio-group>
+    </view>
+
+    <view class="form-item">
+      <view class="label">世代号</view>
+      <input class="input" type="number" placeholder="请输入世代号" value="{{generation}}" bindinput="onGenerationChange" />
+    </view>
+
+    <view class="form-item">
+      <view class="label">父亲</view>
+      <picker mode="selector" range="{{persons}}" range-key="name" bindchange="onFatherChange">
+        <view class="picker">{{fatherId ? persons[fatherIndex].name : '请选择父亲'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <view class="label">母亲</view>
+      <picker mode="selector" range="{{persons}}" range-key="name" bindchange="onMotherChange">
+        <view class="picker">{{motherId ? persons[motherIndex].name : '请选择母亲'}}</view>
+      </picker>
+    </view>
+
+    <button class="btn-primary" bindtap="submit">创建成员</button>
+  </view>
+</view>

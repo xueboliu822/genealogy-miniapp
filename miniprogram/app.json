@@ -1,0 +1,23 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/tree/tree",
+    "pages/person/person",
+    "pages/add/add"
+  ],
+  "window": {
+    "navigationBarTitleText": "族谱通",
+    "navigationBarBackgroundColor": "#8B4513",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#8B4513",
+    "list": [
+      { "text": "家族", "pagePath": "pages/index/index", "iconPath": "assets/tab_family.png", "selectedIconPath": "assets/tab_family_active.png" },
+      { "text": "添加", "pagePath": "pages/add/add", "iconPath": "assets/tab_add.png", "selectedIconPath": "assets/tab_add_active.png" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

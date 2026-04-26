@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="title">族谱树</view>
+
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <block wx:elif="{{tree}}">
+    <!-- 根节点 -->
+    <view class="root-node card" bindtap="goToPerson" data-id="{{tree.id}}">
+      <view class="node-name">{{tree.name}}</view>
+      <view class="node-info text-muted">世代 {{tree.generation}}</view>
+    </view>
+
+    <!-- 子孙节点递归 -->
+    <template name="treeNode">
+      <view class="child-list">
+        <view wx:for="{{node.children}}" wx:key="id" class="tree-branch">
+          <view class="connector"></view>
+          <view class="node card {{item.expand ? 'expanded' : ''}}" bindtap="toggleNode" data-id="{{item.id}}">
+            <view class="node-header">
+              <text class="node-name {{item.gender === '女' ? 'female' : ''}}">{{item.name}}</text>
+              <text class="node-badge">世{{item.generation}}</text>
+            </view>
+            <view wx:if="{{item.expand && item.children.length > 0}}" class="children">
+              <template is="treeNode" data="{{node: item, rootId: item.id}}" />
+            </view>
+          </view>
+        </view>
+      </view>
+    </template>
+
+    <block wx:if="{{tree.children && tree.children.length > 0}}">
+      <view class="children-label">子孙</view>
+      <template is="treeNode" data="{{node: tree}}" />
+    </block>
+  </block>
+
+  <view wx:else class="empty">
+    <text>暂无族谱数据</text>
+  </view>
+</view>

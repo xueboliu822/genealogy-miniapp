@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "miniprogram/",
+  "projectname": "genealogy-miniapp",
+  "description": "族谱小程序",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true
+  },
+  "libVersion": "2.25.0",
+  "appid": "touristappid"
+}
