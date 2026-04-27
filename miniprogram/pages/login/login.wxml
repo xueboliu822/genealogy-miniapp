@@ -1,0 +1,8 @@
+<view class="container">
+  <view class="header">
+    <text class="app-name">家族宝谱</text>
+    <text class="app-desc">微信里的家族记忆</text>
+  </view>
+  <button class="btn-login" bindtap="onLogin" loading="{{loading}}">微信授权登录</button>
+  <button class="btn-skip" bindtap="onSkip">先看看</button>
+</view>

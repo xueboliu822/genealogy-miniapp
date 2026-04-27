@@ -1,57 +1,49 @@
-const api = require('../../services/api');
-
+const api = require('../../services/api.js');
+const DEMO_MEMBERS = [
+  { id: 'p1', name: '刘德辉', gender: 'M', generation_num: 1 },
+  { id: 'p2', name: '刘建国', gender: 'M', generation_num: 2 },
+  { id: 'p3', name: '刘建军', gender: 'M', generation_num: 2 },
+  { id: 'p4', name: '刘秀英', gender: 'F', generation_num: 2 },
+  { id: 'p5', name: '刘志强', gender: 'M', generation_num: 3 },
+  { id: 'p6', name: '刘志华', gender: 'M', generation_num: 3 },
+  { id: 'p7', name: '刘芳', gender: 'F', generation_num: 3 },
+  { id: 'p8', name: '刘伟', gender: 'M', generation_num: 3 },
+  { id: 'p9', name: '刘磊', gender: 'M', generation_num: 4 },
+  { id: 'p10', name: '刘欣', gender: 'F', generation_num: 4 },
+  { id: 'p11', name: '刘晨', gender: 'M', generation_num: 4 },
+];
 Page({
-  data: {
-    tree: null,
-    familyId: '',
-    loading: false
+  data: { family_id: '', family_name: '', members: [], generations: [], loading: true },
+  onLoad(opts) {
+    this.setData({ family_id: opts.family_id || '', family_name: opts.family_name || '' });
+    this.load();
   },
-
-  onLoad(options) {
-    this.setData({ familyId: options.familyId || '' });
-    if (this.data.familyId) {
-      this.loadTree();
-    }
-  },
-
-  loadTree() {
+  load() {
     this.setData({ loading: true });
-    api.getFamilyTree(this.data.familyId).then(res => {
-      // 递归设置展开状态
-      const setExpand = (node, expanded = false) => {
-        node.expand = expanded;
-        if (node.children) {
-          node.children.forEach(c => setExpand(c, false));
-        }
-      };
-      if (res.data) {
-        setExpand(res.data, true);
-      }
-      this.setData({ tree: res.data, loading: false });
+    // Try real API first
+    api.getPersons(this.data.family_id).then(persons => {
+      this._renderPersons(persons || []);
     }).catch(() => {
-      this.setData({ loading: false });
+      // Fallback to demo data
+      this._renderPersons(DEMO_MEMBERS);
     });
   },
-
-  toggleNode(e) {
-    const id = e.currentTarget.dataset.id;
-    const toggle = (node) => {
-      if (node.id === id) {
-        node.expand = !node.expand;
-        return true;
-      }
-      if (node.children) {
-        return node.children.some(toggle);
-      }
-      return false;
-    };
-    const tree = JSON.parse(JSON.stringify(this.data.tree));
-    toggle(tree);
-    this.setData({ tree });
+  _renderPersons(list) {
+    const genMap = {};
+    list.forEach(p => {
+      const g = p.generation_num || 1;
+      if (!genMap[g]) genMap[g] = [];
+      genMap[g].push(p);
+    });
+    const gens = Object.keys(genMap).sort((a,b) => a-b).map(g => ({ gen: g, members: genMap[g] }));
+    this.setData({ members: list, generations: gens, loading: false });
+    wx.hideLoading();
   },
-
-  goToPerson(e) {
+  onAddMember() {
+    wx.navigateTo({ url: `/pages/add/add?family_id=${this.data.family_id}` });
+  },
+  onMemberTap(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: `/pages/person/person?personId=${id}` });
+    wx.navigateTo({ url: `/pages/person/person?person_id=${id}` });
   }
 });

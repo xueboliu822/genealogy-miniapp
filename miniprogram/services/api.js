@@ -16,7 +16,7 @@ function request(path, method, data) {
           resolve(res.data);
         } else if (res.statusCode === 401) {
           wx.removeStorageSync('token');
-          wx.navigateTo({ url: '/pages/login/login' });
+          wx.showToast({ title: '请先登录', icon: 'none' });
           reject(res);
         } else {
           wx.showToast({ title: res.data.message || '请求失败', icon: 'none' });

@@ -1,70 +1,58 @@
-const api = require('../../services/api');
-
+const api = require('../../services/api.js');
 Page({
   data: {
-    name: '',
-    gender: '男',
-    generation: 1,
-    fatherId: '',
-    motherId: '',
-    familyId: '',
-    persons: []
+    mode: 'family',
+    family_id: '',
+    name: '', surname: '',
+    gender: 'M', generation_num: '1', birth_year: '', bio: '',
+    fathers: [], selectedFather: '', selectedFatherId: '',
+    loading: false
   },
-
-  onLoad(options) {
-    this.setData({ familyId: options.familyId || '' });
-    if (this.data.familyId) {
-      this.loadPersons();
+  onLoad(opts) {
+    if (opts.family_id) {
+      this.setData({ mode: 'person', family_id: opts.family_id });
+      this.loadFathers(opts.family_id);
     }
   },
-
-  loadPersons() {
-    api.getPersons(this.data.familyId).then(res => {
-      this.setData({ persons: res.data || [] });
-    });
+  loadFathers(familyId) {
+    api.getPersons(familyId).then(persons => {
+      this.setData({ fathers: (persons || []).filter(p => p.gender === 'M') });
+    }).catch(() => {});
   },
-
-  onNameInput(e) {
-    this.setData({ name: e.detail.value });
-  },
-
-  onGenderChange(e) {
-    this.setData({ gender: e.detail.value });
-  },
-
-  onGenerationChange(e) {
-    this.setData({ generation: parseInt(e.detail.value) || 1 });
-  },
-
+  onModeChange(e) { this.setData({ mode: e.currentTarget.dataset.mode }); },
+  onNameInput(e) { this.setData({ name: e.detail.value }); },
+  onSurnameInput(e) { this.setData({ surname: e.detail.value }); },
+  onGenderChange(e) { this.setData({ gender: e.currentTarget.value }); },
+  onGenInput(e) { this.setData({ generation_num: e.detail.value }); },
+  onBirthInput(e) { this.setData({ birth_year: e.detail.value }); },
+  onBioInput(e) { this.setData({ bio: e.detail.value }); },
   onFatherChange(e) {
-    this.setData({ fatherId: e.detail.value });
+    const idx = e.detail.value;
+    const father = this.data.fathers[idx];
+    this.setData({ selectedFather: father.name, selectedFatherId: father.id });
   },
-
-  onMotherChange(e) {
-    this.setData({ motherId: e.detail.value });
-  },
-
-  submit() {
-    if (!this.data.name.trim()) {
-      wx.showToast({ title: '请输入姓名', icon: 'none' });
-      return;
-    }
-    const data = {
-      name: this.data.name.trim(),
-      gender: this.data.gender,
-      generation: this.data.generation,
-      family_id: this.data.familyId || undefined
-    };
-    if (this.data.fatherId) data.father_id = this.data.fatherId;
-    if (this.data.motherId) data.mother_id = this.data.motherId;
-
-    wx.showLoading({ title: '提交中' });
-    api.createPerson(data).then(() => {
-      wx.hideLoading();
-      wx.showToast({ title: '创建成功' });
+  onSubmitFamily() {
+    if (!this.data.name) { wx.showToast({ title: '请输入家族名称', icon: 'none' }); return; }
+    this.setData({ loading: true });
+    api.createFamily({ name: this.data.name, surname: this.data.surname }).then(() => {
+      wx.showToast({ title: '创建成功', icon: 'success' });
       setTimeout(() => wx.navigateBack(), 1500);
-    }).catch(() => {
-      wx.hideLoading();
-    });
+    }).catch(() => { this.setData({ loading: false }); wx.showToast({ title: '创建失败', icon: 'none' }); });
+  },
+  onSubmitPerson() {
+    if (!this.data.name) { wx.showToast({ title: '请输入姓名', icon: 'none' }); return; }
+    if (!this.data.family_id) { wx.showToast({ title: '请先选择家族', icon: 'none' }); return; }
+    this.setData({ loading: true });
+    api.createPerson({
+      name: this.data.name, gender: this.data.gender,
+      generation_num: parseInt(this.data.generation_num) || 1,
+      family_id: this.data.family_id,
+      father_id: this.data.selectedFatherId || undefined,
+      birth_year: this.data.birth_year ? parseInt(this.data.birth_year) : undefined,
+      bio: this.data.bio || undefined
+    }).then(() => {
+      wx.showToast({ title: '添加成功', icon: 'success' });
+      setTimeout(() => wx.navigateBack(), 1500);
+    }).catch(() => { this.setData({ loading: false }); wx.showToast({ title: '添加失败', icon: 'none' }); });
   }
 });

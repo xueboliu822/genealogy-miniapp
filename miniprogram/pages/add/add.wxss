@@ -1,38 +1,12 @@
-.form {
-  padding: 20rpx 0;
-}
-
-.form-item {
-  margin-bottom: 40rpx;
-}
-
-.label {
-  font-size: 28rpx;
-  color: #666;
-  margin-bottom: 16rpx;
-}
-
-.input {
-  border: 1rpx solid #ddd;
-  border-radius: 8rpx;
-  padding: 24rpx;
-  font-size: 32rpx;
-}
-
-.radio-item {
-  margin-right: 40rpx;
-  font-size: 32rpx;
-}
-
-.picker {
-  border: 1rpx solid #ddd;
-  border-radius: 8rpx;
-  padding: 24rpx;
-  font-size: 32rpx;
-  background: #fff;
-}
-
-.btn-primary {
-  margin-top: 60rpx;
-  width: 100%;
-}
+.container { min-height: 100vh; background: #f5f0eb; padding: 20px; }
+.mode-tabs { display: flex; background: white; border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+.tab { flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-size: 15px; color: #999; }
+.tab.active { background: #8B4513; color: white; font-weight: bold; }
+.form { background: white; border-radius: 12px; padding: 20px; }
+.form-item { margin-bottom: 18px; }
+.form-label { display: block; font-size: 14px; color: #666; margin-bottom: 6px; }
+.form-input { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; }
+radio-group { display: flex; gap: 20px; }
+.radio-item { font-size: 15px; }
+.picker-value { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; color: {{selectedFather ? '#333' : '#999'}}; }
+.btn-submit { background: #8B4513; color: white; border-radius: 25px; font-size: 16px; margin-top: 10px; }

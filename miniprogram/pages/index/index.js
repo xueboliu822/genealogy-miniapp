@@ -1,46 +1,27 @@
-const api = require('../../services/api');
-
+const api = require('../../services/api.js');
 Page({
-  data: {
-    families: [],
-    loading: false
-  },
-
-  onLoad() {
-    this.loadFamilies();
-  },
-
-  onShow() {
-    this.loadFamilies();
-  },
-
-  loadFamilies() {
-    this.setData({ loading: true });
-    api.getFamilies().then(res => {
-      this.setData({ families: res.data || [], loading: false });
+  data: { families: [], isDemo: false },
+  onShow() { this.load(); },
+  onLoad() { this.load(); },
+  load() {
+    wx.showLoading({ title: '加载中...' });
+    api.getFamilies().then(list => {
+      this.setData({ families: list || [], isDemo: false });
+      wx.hideLoading();
     }).catch(() => {
-      this.setData({ loading: false });
+      // API fails - show demo Liu family
+      this.setData({ 
+        families: [{ id: 'demo_liu', name: '刘氏家族', surname: '刘', member_count: 11 }],
+        isDemo: true 
+      });
+      wx.hideLoading();
     });
   },
-
-  goToTree(e) {
-    const id = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: `/pages/tree/tree?familyId=${id}` });
+  onFamilyTap(e) {
+    const { id, name } = e.currentTarget.dataset;
+    wx.navigateTo({ url: `/pages/tree/tree?family_id=${id}&family_name=${name}` });
   },
-
-  createFamily() {
-    wx.showModal({
-      title: '创建家族',
-      editable: true,
-      placeholderText: '请输入家族名称',
-      success: res => {
-        if (res.confirm && res.content) {
-          api.createFamily({ name: res.content }).then(() => {
-            wx.showToast({ title: '创建成功' });
-            this.loadFamilies();
-          });
-        }
-      }
-    });
+  onCreateFamily() {
+    wx.navigateTo({ url: '/pages/add/add' });
   }
 });

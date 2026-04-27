@@ -1,20 +1,30 @@
 <view class="container">
-  <view class="title">我的家族</view>
-
-  <view wx:if="{{loading}}" class="loading">加载中...</view>
-
-  <block wx:elif="{{families.length > 0}}">
-    <view wx:for="{{families}}" wx:key="id" class="card" bindtap="goToTree" data-id="{{item.id}}">
-      <view class="family-name">{{item.name}}</view>
-      <view class="family-info text-muted">
-        {{item.member_count || 0}} 人 · 创建于 {{item.created_at}}
-      </view>
-    </view>
-  </block>
-
-  <view wx:else class="empty">
-    <text>暂无家族，点击下方按钮创建</text>
+  <view class="header-bar">
+    <text class="page-title">我的家族</text>
+    <text class="page-sub">{{families.length}} 个家族</text>
   </view>
 
-  <button class="btn-primary" bindtap="createFamily">创建家族</button>
+  <view class="content">
+    <!-- 家族列表 -->
+    <view wx:if="{{families.length > 0}}" class="family-list">
+      <view wx:for="{{families}}" wx:key="id" class="family-card" bindtap="onFamilyTap" data-id="{{item.id}}" data-name="{{item.name}}">
+        <view class="family-icon">📖</view>
+        <view class="family-info">
+          <text class="family-name">{{item.name}}</text>
+          <text class="family-meta">{{item.surname || ''}} · {{item.member_count || 0}} 人</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:else class="empty-state">
+      <text class="empty-icon">📒</text>
+      <text class="empty-text">还没有家族</text>
+      <text class="empty-hint">创建一个属于你的家族吧</text>
+    </view>
+
+    <!-- 创建按钮 -->
+    <button class="btn-create" bindtap="onCreateFamily">+ 创建新家族</button>
+  </view>
 </view>
