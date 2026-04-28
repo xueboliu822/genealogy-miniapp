@@ -8,5 +8,5 @@
 .form-input { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; }
 radio-group { display: flex; gap: 20px; }
 .radio-item { font-size: 15px; }
-.picker-value { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; color: {{selectedFather ? '#333' : '#999'}}; }
+.picker-value { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 15px; color: #999; }
 .btn-submit { background: #8B4513; color: white; border-radius: 25px; font-size: 16px; margin-top: 10px; }
