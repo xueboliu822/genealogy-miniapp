@@ -1,22 +1,78 @@
 <view class="container">
   <view class="tree-header">
     <text class="tree-title">{{family_name || '族谱'}}</text>
-    <text class="tree-count">{{members.length}} 位成员</text>
-  </view>
-
-  <!-- 世代表 -->
-  <view wx:for="{{generations}}" wx:key="gen" class="generation-block">
-    <view class="gen-label">第{{item.gen}}代</view>
-    <view class="gen-members">
-      <view wx:for="{{item.members}}" wx:key="id" class="member-chip" bindtap="onMemberTap" data-id="{{item.id}}">
-        <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
-        <text class="member-name">{{item.name}}</text>
-      </view>
+    <text class="tree-count">{{members}} 位成员</text>
+    <view class="view-switch">
+      <text class="{{viewMode === 'tree' ? 'active' : ''}}" bindtap="onViewModeChange" data-mode="tree">树形</text>
+      <text class="{{viewMode === 'list' ? 'active' : ''}}" bindtap="onViewModeChange" data-mode="list">列表</text>
     </view>
   </view>
 
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <!-- 树形视图 -->
+  <block wx:if="{{viewMode === 'tree' && !loading}}">
+    <view class="tree-view">
+      <view wx:for="{{treeData}}" wx:key="id" class="tree-root">
+        <view class="root-card" bindtap="onMemberTap" data-id="{{item.id}}">
+          <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
+          <text class="member-name">{{item.name}}</text>
+          <text class="member-gen">第{{item.generation_num}}代</text>
+        </view>
+        <!-- 配偶 -->
+        <view wx:if="{{item.spouse}}" class="spouse-card" bindtap="onMemberTap" data-id="{{item.spouse.id}}">
+          <text class="member-gender">{{item.spouse.gender === 'M' ? '👨' : item.spouse.gender === 'F' ? '👩' : '👤'}}</text>
+          <text class="member-name">{{item.spouse.name}}</text>
+        </view>
+        <!-- 子节点 -->
+        <view wx:if="{{item.children.length > 0}}" class="children-container">
+          <view wx:for="{{item.children}}" wx:key="id" class="child-item" bindtap="onMemberTap" data-id="{{item.id}}">
+            <view class="child-connector"></view>
+            <view class="child-card">
+              <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
+              <text class="member-name">{{item.name}}</text>
+              <text class="member-gen">第{{item.generation_num}}代</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 列表视图 -->
+  <block wx:if="{{viewMode === 'list' && !loading}}">
+    <view class="list-view">
+      <view class="tree-view">
+        <view wx:for="{{treeData}}" wx:key="id" class="tree-root">
+          <view class="root-card" bindtap="onMemberTap" data-id="{{item.id}}">
+            <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
+            <text class="member-name">{{item.name}}</text>
+            <text class="member-gen">第{{item.generation_num}}代</text>
+          </view>
+          <!-- 配偶 -->
+          <view wx:if="{{item.spouse}}" class="spouse-card" bindtap="onMemberTap" data-id="{{item.spouse.id}}">
+            <text class="member-gender">{{item.spouse.gender === 'M' ? '👨' : item.spouse.gender === 'F' ? '👩' : '👤'}}</text>
+            <text class="member-name">{{item.spouse.name}}</text>
+          </view>
+          <!-- 子节点 -->
+          <view wx:if="{{item.children.length > 0}}" class="children-container">
+            <view wx:for="{{item.children}}" wx:key="id" class="child-item" bindtap="onMemberTap" data-id="{{item.id}}">
+              <view class="child-connector"></view>
+              <view class="child-card">
+                <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
+                <text class="member-name">{{item.name}}</text>
+                <text class="member-gen">第{{item.generation_num}}代</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
   <!-- 空状态 -->
-  <view wx:if="{{members.length === 0 && !loading}}" class="empty">
+  <view wx:if="{{(members === 0 || treeData.length === 0) && !loading}}" class="empty">
     <text>暂无成员，快去添加吧</text>
   </view>
 

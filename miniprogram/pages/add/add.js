@@ -17,7 +17,10 @@ Page({
   loadFathers(familyId) {
     api.getPersons(familyId).then(persons => {
       this.setData({ fathers: (persons || []).filter(p => p.gender === 'M') });
-    }).catch(() => {});
+    }).catch(err => {
+      console.error('加载父亲列表失败:', err);
+      wx.showToast({ title: '加载父亲列表失败', icon: 'none' });
+    });
   },
   onModeChange(e) { this.setData({ mode: e.currentTarget.dataset.mode }); },
   onNameInput(e) { this.setData({ name: e.detail.value }); },

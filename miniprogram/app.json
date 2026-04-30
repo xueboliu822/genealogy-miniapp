@@ -9,7 +9,9 @@
   "window": {
     "navigationBarTitleText": "家族宝谱",
     "navigationBarBackgroundColor": "#8B4513",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": true
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
 }

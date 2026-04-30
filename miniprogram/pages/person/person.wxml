@@ -1,30 +1,76 @@
 <view class="container">
-  <view class="person-card">
-    <view class="avatar">{{person.gender === 'M' ? '👨' : person.gender === 'F' ? '👩' : '👤'}}</view>
-    <text class="person-name">{{person.name}}</text>
-    <text class="person-gen">第 {{person.generation_num}} 代</text>
-  </view>
+  <!-- 查看模式 -->
+  <block wx:if="{{!isEditing}}">
+    <view class="person-card">
+      <view class="avatar">{{person.gender === 'M' ? '👨' : person.gender === 'F' ? '👩' : '👤'}}</view>
+      <text class="person-name">{{person.name}}</text>
+      <text class="person-gen">第 {{person.generation_num}} 代</text>
+    </view>
 
-  <view class="info-list">
-    <view class="info-item">
-      <text class="info-label">性别</text>
-      <text class="info-value">{{person.gender === 'M' ? '男' : person.gender === 'F' ? '女' : '其他'}}</text>
+    <view class="info-list">
+      <view class="info-item">
+        <text class="info-label">性别</text>
+        <text class="info-value">{{person.gender === 'M' ? '男' : person.gender === 'F' ? '女' : '其他'}}</text>
+      </view>
+      <view class="info-item" wx:if="{{person.birth_year}}">
+        <text class="info-label">出生年份</text>
+        <text class="info-value">{{person.birth_year}}</text>
+      </view>
+      <view class="info-item" wx:if="{{person.bio}}">
+        <text class="info-label">简介</text>
+        <text class="info-value">{{person.bio}}</text>
+      </view>
+      <view class="info-item" wx:if="{{person.father_name}}">
+        <text class="info-label">父亲</text>
+        <text class="info-value">{{person.father_name}}</text>
+      </view>
     </view>
-    <view class="info-item" wx:if="{{person.birth_year}}">
-      <text class="info-label">出生年份</text>
-      <text class="info-value">{{person.birth_year}}</text>
-    </view>
-    <view class="info-item" wx:if="{{person.bio}}">
-      <text class="info-label">简介</text>
-      <text class="info-value">{{person.bio}}</text>
-    </view>
-    <view class="info-item" wx:if="{{person.father_name}}">
-      <text class="info-label">父亲</text>
-      <text class="info-value">{{person.father_name}}</text>
-    </view>
-  </view>
 
-  <view class="actions">
-    <button class="btn-edit" bindtap="onEdit">编辑</button>
-  </view>
+    <view class="actions">
+      <button class="btn-edit" bindtap="onEdit">编辑</button>
+    </view>
+  </block>
+
+  <!-- 编辑模式 -->
+  <block wx:if="{{isEditing}}">
+    <view class="edit-form">
+      <view class="form-title">编辑成员信息</view>
+
+      <view class="form-item">
+        <text class="form-label">姓名</text>
+        <input class="form-input" value="{{editForm.name}}" bindinput="onNameInput" placeholder="请输入姓名" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">性别</text>
+        <picker mode="selector" range="{{['男', '女', '其他']}}" bindchange="onGenderChange">
+          <view class="form-picker">
+            {{editForm.gender === 'M' ? '男' : editForm.gender === 'F' ? '女' : '其他'}}
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">世代</text>
+        <picker mode="selector" range="{{[1,2,3,4,5,6,7,8,9,10]}}" bindchange="onGenerationChange">
+          <view class="form-picker">第 {{editForm.generation_num}} 代</view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">出生年份</text>
+        <input class="form-input" type="number" value="{{editForm.birth_year}}" bindinput="onBirthYearInput" placeholder="选填" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">简介</text>
+        <textarea class="form-textarea" value="{{editForm.bio}}" bindinput="onBioInput" placeholder="选填" />
+      </view>
+
+      <view class="form-actions">
+        <button class="btn-cancel" bindtap="onCancelEdit">取消</button>
+        <button class="btn-save" bindtap="onSave">保存</button>
+      </view>
+    </view>
+  </block>
 </view>

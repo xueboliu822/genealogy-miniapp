@@ -1,47 +1,67 @@
 const api = require('../../services/api.js');
-const DEMO_MEMBERS = [
-  { id: 'p1', name: '刘德辉', gender: 'M', generation_num: 1 },
-  { id: 'p2', name: '刘建国', gender: 'M', generation_num: 2 },
-  { id: 'p3', name: '刘建军', gender: 'M', generation_num: 2 },
-  { id: 'p4', name: '刘秀英', gender: 'F', generation_num: 2 },
-  { id: 'p5', name: '刘志强', gender: 'M', generation_num: 3 },
-  { id: 'p6', name: '刘志华', gender: 'M', generation_num: 3 },
-  { id: 'p7', name: '刘芳', gender: 'F', generation_num: 3 },
-  { id: 'p8', name: '刘伟', gender: 'M', generation_num: 3 },
-  { id: 'p9', name: '刘磊', gender: 'M', generation_num: 4 },
-  { id: 'p10', name: '刘欣', gender: 'F', generation_num: 4 },
-  { id: 'p11', name: '刘晨', gender: 'M', generation_num: 4 },
-];
+const cache = require('../../utils/cache.js');
+
 Page({
-  data: { family_id: '', family_name: '', members: [], generations: [], loading: true },
+  data: {
+    family_id: '',
+    family_name: '',
+    members: 0,
+    treeData: null,
+    loading: true,
+    viewMode: 'tree' // 'tree' or 'list'
+  },
+
   onLoad(opts) {
-    this.setData({ family_id: opts.family_id || '', family_name: opts.family_name || '' });
+    this.setData({
+      family_id: opts.family_id || '',
+      family_name: opts.family_name || ''
+    });
     this.load();
   },
+
   load() {
-    this.setData({ loading: true });
-    // Try real API first
-    api.getPersons(this.data.family_id).then(persons => {
-      this._renderPersons(persons || []);
+    const cacheKey = `tree_${this.data.family_id}`;
+    // 优先从缓存加载
+    const cached = cache.get(cacheKey);
+    if (cached) {
+      this.setData({
+        family_name: cached.family_name || this.data.family_name,
+        members: cached.members,
+        treeData: cached.roots || []
+      });
+    }
+
+    this.setData({ loading: !cached });
+    // 使用 getFamilyTree API 获取真正的树形数据
+    api.getFamilyTree(this.data.family_id).then(res => {
+      this.setData({
+        family_name: res.family_name,
+        members: res.members,
+        treeData: res.roots || [],
+        loading: false
+      });
+      // 缓存5分钟
+      cache.set(cacheKey, res, 5 * 60 * 1000);
+      wx.hideLoading();
     }).catch(() => {
-      // Fallback to demo data
-      this._renderPersons(DEMO_MEMBERS);
+      this.setData({ loading: false });
+      wx.hideLoading();
+      if (!cache.get(cacheKey)) {
+        wx.showToast({ title: '加载失败', icon: 'none' });
+      }
     });
   },
-  _renderPersons(list) {
-    const genMap = {};
-    list.forEach(p => {
-      const g = p.generation_num || 1;
-      if (!genMap[g]) genMap[g] = [];
-      genMap[g].push(p);
-    });
-    const gens = Object.keys(genMap).sort((a,b) => a-b).map(g => ({ gen: g, members: genMap[g] }));
-    this.setData({ members: list, generations: gens, loading: false });
-    wx.hideLoading();
+
+  onViewModeChange(e) {
+    this.setData({ viewMode: e.currentTarget.dataset.mode });
   },
+
   onAddMember() {
+    // 添加成员后清除缓存
+    cache.remove(`tree_${this.data.family_id}`);
     wx.navigateTo({ url: `/pages/add/add?family_id=${this.data.family_id}` });
   },
+
   onMemberTap(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({ url: `/pages/person/person?person_id=${id}` });
