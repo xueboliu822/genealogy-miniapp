@@ -7,9 +7,10 @@ Page({
     family_name: '',
     members: 0,
     treeData: null,
+    verticalLevels: [],
     flatListData: [],  // 扁平化列表数据
     loading: true,
-    viewMode: 'tree' // 'tree' or 'list'
+    viewMode: 'tree' // 'tree'（垂直世系） or 'list'
   },
 
   onLoad(opts) {
@@ -31,6 +32,7 @@ Page({
         members: cached.members,
         treeData: roots
       });
+      this._buildVerticalLevels(roots);
       this._buildFlatList(roots);
     }
 
@@ -42,12 +44,13 @@ Page({
         members: res.members,
         treeData: roots
       });
+      this._buildVerticalLevels(roots);
       this._buildFlatList(roots);
       // 缓存5分钟
       cache.set(cacheKey, res, 5 * 60 * 1000);
       wx.hideLoading();
     }).catch(() => {
-      this.setData({ loading: false });
+      this.setData({ loading: false, verticalLevels: [] });
       wx.hideLoading();
       if (!cache.get(cacheKey)) {
         wx.showToast({ title: '加载失败', icon: 'none' });
@@ -67,6 +70,40 @@ Page({
     };
     mark(roots);
     return roots;
+  },
+
+  /** 垂直世系：按世代聚合同一代内的节点（先序：本人 → 配偶 → 子支） */
+  _buildVerticalLevels(roots) {
+    const genMap = new Map();
+    const seen = new Set();
+    const add = (p, role) => {
+      if (!p || p.id == null || seen.has(p.id)) return;
+      seen.add(p.id);
+      const g = Number(p.generation_num) || 1;
+      if (!genMap.has(g)) genMap.set(g, []);
+      genMap.get(g).push({ ...p, _rowRole: role });
+    };
+    const walk = (node) => {
+      if (!node) return;
+      add(node, 'primary');
+      if (node.spouse) add(node.spouse, 'spouse');
+      const kids = node.children || [];
+      for (const c of kids) walk(c);
+    };
+    (roots || []).forEach(walk);
+    const sortedGens = Array.from(genMap.keys()).sort((a, b) => a - b);
+    const verticalLevels = sortedGens.map((g, idx) => {
+      const members = genMap.get(g);
+      const isFirstGen = idx === 0;
+      let rankLabel = `第${g}代`;
+      if (isFirstGen) rankLabel = `第${g}代 · 始祖`;
+      const hasPair =
+        members.length === 2 &&
+        members[1] &&
+        members[1]._rowRole === 'spouse';
+      return { generation_num: g, rankLabel, members, isFirstGen, hasPair };
+    });
+    this.setData({ verticalLevels });
   },
 
   // 将嵌套树结构扁平化为列表（按 generation_num 排序）

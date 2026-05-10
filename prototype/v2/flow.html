@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="proto-mp-root">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <title>家族宝谱 · V2 全链路原型（对齐小程序路由）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared-styles.css" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body class="theme-warm proto-mp-body">
+  <div class="dock">
+    <a href="../index.html">← UI 总览</a>
+    <span class="proto-theme-outside" role="group" aria-label="原型配色（小程序登录页无顶栏切换）">
+      <button type="button" class="proto-theme-chip active" data-theme="warm">暖纸</button>
+      <button type="button" class="proto-theme-chip" data-theme="celadon">青黛</button>
+    </span>
+    <span style="color:#a8a29e;font-size:0.82rem;font-weight:600">V2</span>
+  </div>
+  <div class="stack-crumb" id="stack-crumb" aria-live="polite"></div>
+
+  <div class="phone is-login" id="phone">
+    <div class="notch"></div>
+    <div class="mp-theme-bar" role="region" aria-label="外观">
+      <div class="theme-btns-inphone" role="group" aria-label="暖纸或青黛">
+        <button type="button" class="active" data-theme="warm">暖纸</button>
+        <button type="button" data-theme="celadon">青黛</button>
+      </div>
+    </div>
+
+    <div class="phone-stage">
+
+    <!-- 登录 pages/login（布局对齐 login.wxml + login.wxss） -->
+    <section class="mp-screen active" data-mp="login">
+      <div class="mp-login-canvas">
+        <div class="mp-login-header">
+          <span class="mp-login-name">家族宝谱</span>
+          <span class="mp-login-desc">微信里的家族记忆</span>
+        </div>
+        <button type="button" class="btn-login-wx" id="btn-login">微信授权登录</button>
+        <button type="button" class="btn-skip-wx" id="btn-skip">先看看</button>
+      </div>
+    </section>
+
+    <!-- 首页 家族列表 pages/index -->
+    <section class="mp-screen" data-mp="index">
+      <div class="mp-header-plain">
+        <h1 class="title">我的家族</h1>
+        <p class="sub"><span id="index-family-count">1</span> 个家族</p>
+      </div>
+      <div class="mp-scroll">
+        <div class="family-card-mp" data-push="tree" data-family-name="田湖刘氏家族" data-member-count="11">
+          <span class="emoji" aria-hidden="true">📖</span>
+          <div style="flex:1;min-width:0">
+            <div class="name">田湖刘氏家族</div>
+            <div class="hall">堂号：亲睦堂</div>
+            <div class="meta">刘氏 · 11 人</div>
+          </div>
+          <span class="chev">›</span>
+        </div>
+        <button type="button" class="btn-primary-mp" data-push="add" data-add-mode="family">+ 创建新家族</button>
+      </div>
+    </section>
+
+    <!-- 族谱树 pages/tree -->
+    <section class="mp-screen" data-mp="tree">
+      <div class="tree-top">
+        <div class="row1">
+          <div>
+            <p class="tree-title" id="dyn-tree-title">田湖刘氏家族</p>
+            <p class="tree-count"><span id="dyn-tree-count">11</span> 位成员</p>
+          </div>
+        </div>
+        <div class="tree-actions">
+          <div class="view-switch" role="tablist">
+            <button type="button" class="active" data-tree-mode="tree">世系</button>
+            <button type="button" data-tree-mode="list">列表</button>
+          </div>
+          <button type="button" class="btn-manage" data-push="family">管理</button>
+        </div>
+      </div>
+      <div class="tree-body">
+        <div class="mp-tree-view" id="mp-tree-view">
+          <div class="vertical-tree" aria-label="族谱世系">
+            <div class="vt-level">
+              <div class="vt-rank">一世 · 始祖</div>
+              <div class="vt-nodes">
+                <button type="button" class="vt-node vt-root" data-push="person" data-person-name="刘公讳某" data-gen="1" data-gen-name="始" data-gender="M">始迁祖<br />刘公讳某</button>
+              </div>
+            </div>
+            <div class="vt-stem" aria-hidden="true"></div>
+            <div class="vt-level">
+              <div class="vt-rank">二世</div>
+              <div class="vt-nodes vt-pair">
+                <button type="button" class="vt-node" data-push="person" data-person-name="刘承业" data-gen="2" data-gender="M">长子<br />刘承业</button>
+                <span class="vt-mate">配</span>
+                <button type="button" class="vt-node vt-spouse" data-push="person" data-person-name="王氏" data-gen="2" data-gender="F">宁乡<br />王氏</button>
+              </div>
+            </div>
+            <div class="vt-stem short" aria-hidden="true"></div>
+            <div class="vt-level">
+              <div class="vt-rank">三世</div>
+              <div class="vt-nodes vt-pair">
+                <button type="button" class="vt-node" data-push="person" data-person-name="刘明德" data-gen="3" data-gen-name="德" data-alive="1" data-me="1" data-gender="M">刘明德<span class="node-badge-me">我</span><br /><span style="font-size:0.75rem;font-family:var(--font-sans);color:var(--ink-soft)">亲睦堂</span></button>
+                <span class="vt-mate">配</span>
+                <button type="button" class="vt-node vt-spouse" data-push="person" data-person-name="张氏" data-gen="3" data-gender="F">张氏</button>
+              </div>
+            </div>
+            <div class="vt-fork" aria-hidden="true"></div>
+            <div class="vt-stem short" aria-hidden="true"></div>
+            <div class="vt-level">
+              <div class="vt-rank">四世</div>
+              <div class="vt-nodes">
+                <button type="button" class="vt-node small" data-push="person" data-person-name="刘某某" data-gen="4" data-gender="M">刘某某</button>
+                <button type="button" class="vt-node small" data-push="person" data-person-name="刘某某" data-gen="4" data-gender="M">刘某某</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mp-list-view hidden" id="mp-list-view">
+          <div class="list-item-mp" data-push="person" data-person-name="刘公讳某" data-gen="1" data-gender="M">刘公讳某 · 第1代 · 已故</div>
+          <div class="list-item-mp spouse" data-push="person" data-person-name="王太君" data-gender="F">王太君（配）</div>
+          <div class="list-item-mp" data-push="person" data-person-name="刘明德" data-gen="3" data-me="1" data-gender="M">刘明德 · 第3代 · 在世<span class="node-badge-me" style="margin-left:6px">我</span></div>
+          <div class="list-item-mp spouse" data-push="person" data-person-name="张氏" data-gender="F">张氏（配）</div>
+        </div>
+      </div>
+      <div class="bottom-bar-mp">
+        <button type="button" class="btn-add" data-push="add" data-add-mode="person">+ 添加成员</button>
+      </div>
+    </section>
+
+    <!-- 家族管理 pages/family -->
+    <!-- 家族管理：头部与族谱树同为 tree-top 纸色顶栏 + 内嵌 Tab，避免深色 mp-bar 突变 -->
+    <section class="mp-screen" data-mp="family">
+      <div class="tree-top family-head-unified">
+        <div class="family-head-row">
+          <button type="button" class="mp-back-tree" data-mp-back>返回</button>
+          <div class="family-head-text">
+            <p class="tree-title" id="dyn-family-bar-title">家族管理</p>
+            <p class="tree-count" id="dyn-family-bar-sub">档案与动态</p>
+          </div>
+        </div>
+        <div class="tabs-mp dense family-tabs-in-head" role="tablist">
+          <button type="button" class="active" data-fam-tab="info">基本信息</button>
+          <button type="button" data-fam-tab="donations">捐献榜单</button>
+          <button type="button" data-fam-tab="activities">家族活动</button>
+        </div>
+      </div>
+      <div class="mp-scroll">
+        <div class="fam-panel" data-fam-panel="info">
+          <div class="field-mp"><label>堂号</label><input value="亲睦堂" /></div>
+          <div class="field-mp"><label>祠堂位置</label><textarea>湖南省宁乡市（示例）</textarea></div>
+          <div class="field-mp"><label>迁徙源流</label><textarea>从江西迁至湖南省宁乡市</textarea></div>
+          <div class="field-mp"><label>字辈诗</label><textarea class="tall">文明昌世德，立盛赞熙荣，定茂贤良作，佳深永刻承</textarea></div>
+          <button type="button" class="btn-primary-mp">保存信息</button>
+          <div class="bind-card" style="margin-top:20px">
+            <div class="bind-card-title">微信绑定</div>
+            <p class="bind-status-line">已绑定 <strong id="bind-name-preview">刘明德</strong> · 三世</p>
+            <div class="bind-row">
+              <button type="button" class="primary">更换</button>
+              <button type="button">解绑</button>
+            </div>
+          </div>
+        </div>
+        <div class="fam-panel" data-fam-panel="donations" hidden>
+          <div class="donation-campaign">
+            <div class="campaign-head">
+              <div class="campaign-title">2026清明祭祖</div>
+              <div class="campaign-meta">日期 · 2026/4/4　　捐款总额 · <strong>98,000 元</strong></div>
+            </div>
+            <ul class="campaign-entries">
+              <li><span class="who">刘三</span><span class="amt">500 元</span></li>
+              <li><span class="who">刘铁</span><span class="amt">3,000 元</span></li>
+            </ul>
+          </div>
+          <div class="field-mp" style="margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff">
+            <div class="donation-type-row">
+              <span class="type-label" style="font-size:0.8rem;font-weight:600">榜单</span>
+              <div class="type-btns">
+                <button type="button" class="type-btn active">祠堂捐献</button>
+                <button type="button" class="type-btn">清明祭祖</button>
+                <button type="button" class="type-btn">其他贡献</button>
+              </div>
+            </div>
+            <div class="field-mp"><label>姓名</label><input placeholder="捐献人姓名" /></div>
+            <div class="field-mp"><label>金额/贡献</label><input placeholder="如：50000元" /></div>
+            <div class="field-mp"><label>日期</label><input placeholder="2024-01-15" /></div>
+            <div class="field-mp"><label>说明</label><input placeholder="备注" /></div>
+            <button type="button" class="btn-add-donation">添加记录</button>
+          </div>
+        </div>
+        <div class="fam-panel" data-fam-panel="activities" hidden>
+          <div class="moment-publish-bar">
+            <button type="button" class="btn-ghost-mp" data-open-composer style="margin-top:0;padding:10px 16px;font-size:0.84rem;width:auto">＋ 发布</button>
+          </div>
+          <article class="moment-card">
+            <div class="moment-head">
+              <div class="moment-avatar" aria-hidden="true">📷</div>
+              <div class="moment-who">
+                <div class="moment-name">刘志强</div>
+                <div class="moment-meta">管理员 · 2 天前</div>
+              </div>
+              <span class="moment-role">管理员</span>
+            </div>
+            <p class="moment-text">2026 清明祭祖花絮。</p>
+            <div class="moment-photos">
+              <div class="moment-ph" aria-hidden="true">🏛</div>
+              <div class="moment-ph" aria-hidden="true">🌸</div>
+              <div class="moment-ph" aria-hidden="true">👨‍👩‍👧</div>
+            </div>
+            <div class="moment-actions">
+              <button type="button" class="moment-like" data-like data-count="28">♥ 赞 28</button>
+              <button type="button">💬 5</button>
+            </div>
+            <div class="moment-comments">
+              <div class="moment-comment-line"><span class="mn">刘明德</span>明年还来。</div>
+              <div class="moment-comment-line"><span class="mn">刘铁</span>+1</div>
+              <div class="moment-comments-extra" id="feed-extra-flow" hidden>
+                <div class="moment-comment-line"><span class="mn">刘建国</span>从深圳赶回来。</div>
+                <div class="moment-comment-line"><span class="mn">刘芳</span>照片清楚。</div>
+              </div>
+              <button type="button" class="moment-comments-more" data-toggle-extra="feed-extra-flow" data-more-label="展开更多 2 条…" aria-expanded="false">展开更多 2 条…</button>
+            </div>
+            <div class="moment-engage">
+              <input type="text" placeholder="写留言…" maxlength="200" data-comment-input />
+              <button type="button" class="btn-primary-mp" style="margin-top:8px;padding:10px;font-size:0.85rem" data-send-comment>发送</button>
+            </div>
+          </article>
+          <article class="moment-card">
+            <div class="moment-head">
+              <div class="moment-avatar" aria-hidden="true">📒</div>
+              <div class="moment-who">
+                <div class="moment-name">编委会</div>
+                <div class="moment-meta">管理员 · 1 周前</div>
+              </div>
+              <span class="moment-role">管理员</span>
+            </div>
+            <p class="moment-text">团拜报名截止提醒（单图示例）。</p>
+            <div class="moment-photos is-single">
+              <div class="moment-ph" aria-hidden="true">🧧</div>
+            </div>
+            <div class="moment-actions">
+              <button type="button" disabled title="需绑定">♥ 赞 12</button>
+              <button type="button" disabled title="需绑定">💬</button>
+            </div>
+            <div class="moment-engage is-locked">
+              <p class="engage-tip" style="font-size:0.72rem;color:var(--ink-soft);margin:0 0 8px">绑定微信后可互动</p>
+              <input type="text" disabled placeholder="留言" />
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 成员详情 pages/person -->
+    <section class="mp-screen" data-mp="person">
+      <div class="mp-bar">
+        <button type="button" class="mp-back" data-mp-back>返回</button>
+        <div><h1>成员详情</h1></div>
+      </div>
+      <div class="mp-scroll">
+        <div class="person-view-mp" id="person-view">
+          <div class="person-avatar-block">
+            <div class="person-avatar" id="dyn-person-emoji">👨</div>
+            <span class="avatar-tip">换头像</span>
+          </div>
+          <div class="person-card-mp">
+            <div class="name-row"><span id="dyn-person-name">刘明德</span><span id="dyn-person-genname" style="font-size:0.85rem;color:var(--ink-soft)"> · 德字辈</span></div>
+            <div class="gen-line">第 <span id="dyn-person-gennum">3</span> 代 · <span id="dyn-person-alive" class="status-alive">在世</span> · <span id="dyn-person-year">1985 年生</span></div>
+          </div>
+          <div class="info-list-mp">
+            <div class="info-row-mp"><span class="k">性别</span><span>男</span></div>
+            <div class="info-row-mp"><span class="k">父亲</span><span>已设置</span></div>
+            <div class="info-row-mp"><span class="k">配偶</span><span>已设置</span></div>
+            <div class="info-row-mp"><span class="k">简介</span><span>居宁乡</span></div>
+          </div>
+          <div class="eval-box">
+            <h3>家族评价 <span style="font-weight:400;color:var(--ink-soft)">2 条</span></h3>
+            <div class="eval-item">热心组织清明祭祖。<span style="color:#a8a29e;font-size:0.75rem;display:block;margin-top:4px">2026-01-02</span></div>
+            <div class="eval-item">字辈记载清晰。<span style="color:#a8a29e;font-size:0.75rem;display:block;margin-top:4px">2025-11-20</span></div>
+            <div class="eval-row">
+              <input type="text" placeholder="添加评价…" />
+              <button type="button">发表</button>
+            </div>
+          </div>
+          <button type="button" class="btn-primary-mp" id="btn-edit-person">编辑信息</button>
+        </div>
+        <div class="person-edit-mp" id="person-edit">
+          <p style="font-weight:600;margin:0 0 12px">编辑成员信息</p>
+          <div class="field-mp"><label>姓名</label><input id="edit-name" value="刘明德" /></div>
+          <div class="field-mp"><label>性别</label><div class="picker-fake">男 ▾</div></div>
+          <div class="field-mp"><label>世代</label><div class="picker-fake">第 3 代 ▾</div></div>
+          <div class="field-mp"><label>辈分字</label><input value="德" /></div>
+          <div class="field-mp"><label>出生年份</label><input type="number" value="1985" /></div>
+          <div class="field-mp"><label>是否在世</label><div class="radio-row"><label><input type="radio" name="alive" checked /> 在世</label><label><input type="radio" name="alive" /> 已故</label></div></div>
+          <div class="field-mp"><label>居住地</label><div class="picker-fake">未设置 ▾</div></div>
+          <div class="field-mp"><label>父亲</label><div class="picker-fake">刘某某 ▾</div></div>
+          <div class="field-mp"><label>母亲</label><div class="picker-fake">未设置 ▾</div></div>
+          <div class="field-mp"><label>简介</label><textarea></textarea></div>
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button type="button" class="btn-ghost-mp" id="btn-cancel-edit" style="margin-top:0">取消</button>
+            <button type="button" class="btn-primary-mp" id="btn-save-edit" style="margin-top:0">保存</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 创建/添加 pages/add -->
+    <section class="mp-screen" data-mp="add">
+      <div class="mp-bar">
+        <button type="button" class="mp-back" data-mp-back>返回</button>
+        <div><h1 id="add-page-title">创建 / 添加</h1></div>
+      </div>
+      <div class="mp-scroll">
+        <div class="mode-tabs-mp">
+          <button type="button" data-add-tab="family">创建家族</button>
+          <button type="button" data-add-tab="person">添加成员</button>
+        </div>
+        <div class="form-block-mp active" data-add-panel="family">
+          <div class="field-mp"><label>家族名称 *</label><input placeholder="如：李氏大家族" /></div>
+          <div class="field-mp"><label>姓氏</label><input placeholder="如：李" /></div>
+          <div class="field-mp"><label>堂号（选填）</label><input placeholder="亲睦堂" /></div>
+          <div class="field-mp"><label>迁徙源流（选填）</label><textarea placeholder="从江西迁至…"></textarea></div>
+          <div class="field-mp"><label>字辈诗（选填）</label><textarea class="tall" placeholder="全支字辈诗"></textarea></div>
+          <button type="button" class="btn-primary-mp" data-add-submit>创建家族</button>
+        </div>
+        <div class="form-block-mp" data-add-panel="person">
+          <div class="field-mp"><label>姓名 *</label><input placeholder="成员姓名" /></div>
+          <div class="field-mp"><label>性别</label><div class="radio-row"><label><input type="radio" name="g" checked /> 男</label><label><input type="radio" name="g" /> 女</label></div></div>
+          <div class="field-mp"><label>世代</label><input type="number" placeholder="3" /></div>
+          <div class="field-mp"><label>辈分字</label><input placeholder="辈分字" /></div>
+          <div class="field-mp"><label>父亲</label><div class="picker-fake">选择父亲（选填）▾</div></div>
+          <div class="field-mp"><label>母亲</label><div class="picker-fake">选择母亲（选填）▾</div></div>
+          <div class="field-mp"><label>配偶</label><div class="picker-fake">选择配偶（选填）▾</div></div>
+          <div class="field-mp"><label>出生年份</label><input type="number" placeholder="1990" /></div>
+          <div class="field-mp"><label>是否在世</label><div class="radio-row"><label><input type="radio" name="al" checked /> 在世</label><label><input type="radio" name="al" /> 已故</label></div></div>
+          <div class="field-mp"><label>去世年份</label><input type="number" placeholder="已故时填写" disabled style="opacity:0.5" /></div>
+          <div class="field-mp"><label>居住地</label><div class="picker-fake">选填 ▾</div></div>
+          <div class="field-mp"><label>简介</label><textarea placeholder="简单描述"></textarea></div>
+          <button type="button" class="btn-primary-mp" data-add-submit>添加成员</button>
+        </div>
+      </div>
+    </section>
+    </div>
+  </div>
+
+  <div class="proto-toast" id="proto-toast" hidden role="status" aria-live="polite"></div>
+
+  <div class="moment-composer-backdrop" id="fam-moment-composer" hidden>
+    <div class="moment-composer-sheet" role="dialog" aria-modal="true" aria-labelledby="fam-composer-title">
+      <div class="moment-composer-head">
+        <button type="button" class="btn-compact ghost" data-close-composer>取消</button>
+        <strong id="fam-composer-title">发布活动</strong>
+        <button type="button" class="btn-compact primary" data-publish-submit>发表</button>
+      </div>
+      <div class="moment-composer-body">
+        <textarea placeholder="分享文字与图片…"></textarea>
+        <div class="composer-img-row">
+          <button type="button" class="composer-add-ph">＋ 选图</button>
+          <button type="button" class="composer-add-ph">＋</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var stack = [{ screen: 'login' }];
+
+      var labels = {
+        login: '登录',
+        index: '我的家族',
+        tree: '族谱树',
+        family: '家族管理',
+        person: '成员详情',
+        add: '创建/添加'
+      };
+
+      function crumb() {
+        return '路由栈 · ' + stack.map(function (s) {
+          var b = labels[s.screen] || s.screen;
+          if (s.screen === 'tree' && s.familyName) b += '（' + s.familyName + '）';
+          if (s.screen === 'person' && s.personName) b += '（' + s.personName + '）';
+          return b;
+        }).join(' → ');
+      }
+
+      function render() {
+        var top = stack[stack.length - 1];
+        document.querySelectorAll('.mp-screen').forEach(function (el) {
+          el.classList.toggle('active', el.getAttribute('data-mp') === top.screen);
+        });
+        var phoneRoot = document.getElementById('phone');
+        if (phoneRoot) phoneRoot.classList.toggle('is-login', top.screen === 'login');
+        document.querySelectorAll('.proto-theme-outside').forEach(function (el) {
+          el.toggleAttribute('hidden', top.screen !== 'login');
+        });
+        document.getElementById('stack-crumb').textContent = crumb();
+
+        if (top.screen === 'tree') {
+          document.getElementById('dyn-tree-title').textContent = top.familyName || '田湖刘氏家族';
+          document.getElementById('dyn-tree-count').textContent = top.memberCount != null ? top.memberCount : 11;
+        }
+        if (top.screen === 'family') {
+          var t = (top.familyName || '田湖刘氏家族') + ' - 家族管理';
+          document.getElementById('dyn-family-bar-title').textContent = t;
+        }
+        if (top.screen === 'person') {
+          document.getElementById('dyn-person-name').textContent = top.personName || '成员';
+          var gn = top.genName || '';
+          document.getElementById('dyn-person-genname').textContent = gn ? ' · ' + gn + '字辈' : '';
+          document.getElementById('dyn-person-gennum').textContent = top.generation || '—';
+          var aliveEl = document.getElementById('dyn-person-alive');
+          var yearEl = document.getElementById('dyn-person-year');
+          if (top.alive) {
+            aliveEl.textContent = '在世';
+            aliveEl.className = 'status-alive';
+            yearEl.textContent = '1985 年生';
+          } else {
+            aliveEl.textContent = '已故';
+            aliveEl.className = 'status-deceased';
+            yearEl.textContent = top.deathYear ? top.deathYear + ' 年逝' : '生卒年待考';
+          }
+          document.getElementById('dyn-person-emoji').textContent = top.gender === 'F' ? '👩' : '👨';
+          document.getElementById('person-view').classList.remove('hidden');
+          document.getElementById('person-edit').classList.remove('visible');
+        }
+        if (top.screen === 'add') {
+          var mode = top.addMode || 'family';
+          document.getElementById('add-page-title').textContent = mode === 'family' ? '创建家族' : '添加成员';
+          document.querySelectorAll('[data-add-tab]').forEach(function (b) {
+            b.classList.toggle('active', b.getAttribute('data-add-tab') === mode);
+          });
+          document.querySelectorAll('[data-add-panel]').forEach(function (p) {
+            p.classList.toggle('active', p.getAttribute('data-add-panel') === mode);
+          });
+        }
+      }
+
+      function go(screen, extra) {
+        var o = { screen: screen };
+        if (extra) for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) o[k] = extra[k];
+        stack.push(o);
+        render();
+      }
+
+      function back() {
+        if (stack.length <= 1) return;
+        stack.pop();
+        render();
+      }
+
+      function enterFromLogin() {
+        stack = [{ screen: 'index' }];
+        render();
+      }
+
+      document.getElementById('btn-login').addEventListener('click', enterFromLogin);
+      document.getElementById('btn-skip').addEventListener('click', enterFromLogin);
+
+      document.body.addEventListener('click', function (e) {
+        var backBtn = e.target.closest('[data-mp-back]');
+        if (backBtn) {
+          e.preventDefault();
+          back();
+          return;
+        }
+        var p = e.target.closest('[data-push]');
+        if (p) {
+          var dest = p.getAttribute('data-push');
+          if (dest === 'tree') {
+            go('tree', {
+              familyName: p.getAttribute('data-family-name') || '田湖刘氏家族',
+              memberCount: parseInt(p.getAttribute('data-member-count'), 10) || 11
+            });
+          } else if (dest === 'family') {
+            var cur = stack[stack.length - 1];
+            go('family', { familyName: cur.familyName || '田湖刘氏家族' });
+          } else if (dest === 'person') {
+            go('person', {
+              personName: p.getAttribute('data-person-name') || '成员',
+              generation: p.getAttribute('data-gen') || '',
+              genName: p.getAttribute('data-gen-name') || '',
+              alive: p.getAttribute('data-alive') === '1',
+              gender: p.getAttribute('data-gender') || 'M'
+            });
+          } else if (dest === 'add') {
+            go('add', { addMode: p.getAttribute('data-add-mode') || 'person' });
+          }
+        }
+      });
+
+      document.querySelectorAll('[data-tree-mode]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var m = b.getAttribute('data-tree-mode');
+          document.querySelectorAll('[data-tree-mode]').forEach(function (x) {
+            x.classList.toggle('active', x === b);
+          });
+          document.getElementById('mp-tree-view').classList.toggle('hidden', m !== 'tree');
+          document.getElementById('mp-list-view').classList.toggle('hidden', m !== 'list');
+        });
+      });
+
+      document.querySelectorAll('[data-fam-tab]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var t = b.getAttribute('data-fam-tab');
+          document.querySelectorAll('[data-fam-tab]').forEach(function (x) {
+            x.classList.toggle('active', x === b);
+          });
+          document.querySelectorAll('[data-fam-panel]').forEach(function (p) {
+            var on = p.getAttribute('data-fam-panel') === t;
+            p.hidden = !on;
+          });
+        });
+      });
+
+      document.querySelectorAll('[data-add-tab]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var t = b.getAttribute('data-add-tab');
+          var top = stack[stack.length - 1];
+          if (top.screen === 'add') top.addMode = t;
+          document.querySelectorAll('[data-add-tab]').forEach(function (x) {
+            x.classList.toggle('active', x === b);
+          });
+          document.querySelectorAll('[data-add-panel]').forEach(function (p) {
+            p.classList.toggle('active', p.getAttribute('data-add-panel') === t);
+          });
+          document.getElementById('add-page-title').textContent = t === 'family' ? '创建家族' : '添加成员';
+        });
+      });
+
+      document.querySelectorAll('[data-add-submit]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          back();
+        });
+      });
+
+      document.getElementById('btn-edit-person').addEventListener('click', function () {
+        document.getElementById('person-view').classList.add('hidden');
+        document.getElementById('person-edit').classList.add('visible');
+      });
+      document.getElementById('btn-cancel-edit').addEventListener('click', function () {
+        document.getElementById('person-view').classList.remove('hidden');
+        document.getElementById('person-edit').classList.remove('visible');
+      });
+      document.getElementById('btn-save-edit').addEventListener('click', function () {
+        var n = document.getElementById('edit-name').value;
+        if (n) document.getElementById('dyn-person-name').textContent = n;
+        document.getElementById('person-view').classList.remove('hidden');
+        document.getElementById('person-edit').classList.remove('visible');
+      });
+
+      document.querySelectorAll('[data-theme]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var th = b.getAttribute('data-theme');
+          document.body.classList.toggle('theme-celadon', th === 'celadon');
+          document.body.classList.toggle('theme-warm', th === 'warm');
+          document.querySelectorAll('[data-theme]').forEach(function (x) {
+            x.classList.toggle('active', x.getAttribute('data-theme') === th);
+          });
+        });
+      });
+
+      function protoToast(msg) {
+        var el = document.getElementById('proto-toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.removeAttribute('hidden');
+        clearTimeout(protoToast._t);
+        protoToast._t = setTimeout(function () {
+          el.setAttribute('hidden', '');
+        }, 2400);
+      }
+
+      var famComposer = document.getElementById('fam-moment-composer');
+      function closeFamComposer() {
+        famComposer.setAttribute('hidden', '');
+      }
+      document.querySelectorAll('[data-open-composer]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          famComposer.removeAttribute('hidden');
+        });
+      });
+      document.querySelectorAll('[data-close-composer]').forEach(function (b) {
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeFamComposer();
+        });
+      });
+      var famPub = famComposer.querySelector('[data-publish-submit]');
+      if (famPub) {
+        famPub.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var ta = famComposer.querySelector('textarea');
+          if (ta && !ta.value.trim()) {
+            protoToast('请填写正文后再发表');
+            return;
+          }
+          closeFamComposer();
+          protoToast('已发布');
+        });
+      }
+      famComposer.addEventListener('click', function (e) {
+        if (e.target === famComposer) closeFamComposer();
+      });
+      famComposer.querySelector('.moment-composer-sheet').addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      document.querySelectorAll('[data-toggle-extra]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-toggle-extra');
+          var box = document.getElementById(id);
+          if (!box) return;
+          var open = box.hasAttribute('hidden');
+          var moreLabel = btn.getAttribute('data-more-label') || '展开更多 2 条…';
+          if (open) {
+            box.removeAttribute('hidden');
+            btn.textContent = '收起';
+            btn.setAttribute('aria-expanded', 'true');
+          } else {
+            box.setAttribute('hidden', '');
+            btn.textContent = moreLabel;
+            btn.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-send-comment]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var wrap = btn.closest('.moment-engage');
+          var inp = wrap ? wrap.querySelector('[data-comment-input]') : null;
+          if (!inp || !inp.value.trim()) {
+            protoToast('请输入留言内容');
+            return;
+          }
+          inp.value = '';
+          protoToast('已发送');
+        });
+      });
+
+      document.querySelectorAll('[data-like]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var n = parseInt(btn.getAttribute('data-count'), 10) || 0;
+          var liked = btn.classList.toggle('is-liked');
+          if (liked) {
+            btn.setAttribute('data-count', String(n + 1));
+            btn.textContent = '♥ 已赞 ' + (n + 1);
+          } else {
+            btn.setAttribute('data-count', String(Math.max(0, n - 1)));
+            btn.textContent = '♥ 赞 ' + Math.max(0, n - 1);
+          }
+        });
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

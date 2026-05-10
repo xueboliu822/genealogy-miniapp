@@ -2,23 +2,35 @@
 <html lang="zh-Hans">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>家族宝谱 · UI 方案总览</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared-styles.css" />
   <style>
     * { box-sizing: border-box; }
+    html {
+      height: 100%;
+    }
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: "DM Sans", "PingFang SC", sans-serif;
+      min-height: 100%;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-sans);
       background: linear-gradient(160deg, #1c1917 0%, #0c0a09 100%);
       color: #e7e5e4;
-      padding: 32px 20px 48px;
+      padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(40px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    }
+    body > * {
+      width: 100%;
+      max-width: var(--proto-overview-max);
     }
     h1 {
-      font-family: "Noto Serif SC", serif;
+      font-family: var(--font-serif);
       font-size: 1.75rem;
       margin: 0 0 8px;
       letter-spacing: 0.06em;
@@ -29,14 +41,6 @@
       font-size: 0.92rem;
       line-height: 1.6;
       max-width: 520px;
-    }
-    .grid {
-      display: grid;
-      gap: 16px;
-      max-width: 640px;
-    }
-    @media (min-width: 560px) {
-      .grid { grid-template-columns: 1fr 1fr; }
     }
     .card {
       display: block;
@@ -69,45 +73,28 @@
       margin-top: 16px;
       opacity: 0.9;
     }
-    .v1 { background: linear-gradient(90deg, #7c2d12, #faf8f5); }
-    .v2 { background: linear-gradient(90deg, #2a6b5b, #edf1f0); }
-    .v3 { background: linear-gradient(90deg, #7c2d12 40%, #faf8f5 40%, #7c2d12 40%); }
-    .card.v1-bg { background: rgba(124, 45, 18, 0.12); }
-    .card.v2-bg { background: rgba(42, 107, 91, 0.15); }
-    .card.v3-bg { background: rgba(251, 146, 60, 0.1); }
+    .v-dual { background: linear-gradient(90deg, #7c2d12 0%, #7c2d12 50%, #2a6b5b 50%, #edf1f0 100%); }
+    .card.dual-bg { background: rgba(124, 45, 18, 0.12); }
     footer {
       margin-top: 36px;
       padding-top: 24px;
       border-top: 1px solid rgba(255,255,255,0.08);
       font-size: 0.8rem;
       color: #78716c;
-      max-width: 640px;
       line-height: 1.6;
     }
     footer a { color: #fdba74; }
   </style>
 </head>
 <body>
-  <h1>UI 三方案对比</h1>
-  <p class="lead">以下为同一信息架构的三种视觉与一种树形布局差异。请任选打开全屏手机框体验；定稿后按选定方案改 <code>miniprogram/</code>。</p>
+  <h1>UI 原型（V2）</h1>
+  <p class="lead"><strong>V2</strong> 仅保留<strong>一条</strong>全链路 HTML：<strong>微信登录</strong>（对齐 <code>pages/login</code>）→ 暖纸 / 青黛页内切换 → <strong>垂直世系</strong>族谱树 → 成员详情与管理表单 → <strong>家族文化</strong>（捐献榜单 · 家族活动 · 绑定谱员）→ 创建家族 / 添加成员。路由与栈式返回对齐 <code>miniprogram/app.json</code>；样式上 <code>shared-styles.css</code> 只管帧与变量，页面与组件见 <code>v2/app.css</code>。</p>
 
-  <div class="grid">
-    <a class="card v1-bg" href="variants/v1-warm-paper.html">
-      <h2>方案一 · 暖纸墨线</h2>
-      <p>褐红主色 + 纸本底，衬线标题。族谱树为占位说明，便于后续接横向/缩略图方案。</p>
-      <div class="swatch v1"></div>
-    </a>
-    <a class="card v2-bg" href="variants/v2-celadon.html">
-      <h2>方案二 · 青黛文博</h2>
-      <p>冷绿主色 + 灰白底，偏档案展陈感，适合希望界面更克制、正式的家族。</p>
-      <div class="swatch v2"></div>
-    </a>
-    <a class="card v3-bg" href="variants/v3-vertical-tree.html" style="grid-column: 1 / -1;">
-      <h2>方案三 · 暖纸 + 垂直世系树</h2>
-      <p>视觉同方案一基调；<strong>「族谱树」Tab 为自上而下垂直 lineage</strong>，竖线连代、同代夫妇并排，贴近纸质吊线图阅读习惯。</p>
-      <div class="swatch v3"></div>
-    </a>
-  </div>
+  <a class="card dual-bg" href="v2/flow.html" style="display:block;margin-bottom:20px;text-decoration:none;color:inherit;border-color:rgba(251,191,36,0.35);">
+    <h2>全页面流程 · V2（<code>v2/flow.html</code>）</h2>
+    <p>登录 → 我的家族 → 族谱树 → 成员详情 → 家族管理 → 创建 / 添加。Dock 与页内均可切换主题；面包屑示意小程序导航栈。</p>
+    <div class="swatch v-dual" style="opacity:0.85"></div>
+  </a>
 
   <footer>
     管理后台原型见 <a href="../../genealogy/prototype/admin.html">genealogy/prototype/admin.html</a>（需两仓库同级）。说明：<a href="README.md">prototype/README.md</a>
