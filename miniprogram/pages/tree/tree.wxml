@@ -2,9 +2,12 @@
   <view class="tree-header">
     <text class="tree-title">{{family_name || '族谱'}}</text>
     <text class="tree-count">{{members}} 位成员</text>
-    <view class="view-switch">
-      <text class="{{viewMode === 'tree' ? 'active' : ''}}" bindtap="onViewModeChange" data-mode="tree">树形</text>
-      <text class="{{viewMode === 'list' ? 'active' : ''}}" bindtap="onViewModeChange" data-mode="list">列表</text>
+    <view class="header-actions">
+      <view class="view-switch">
+        <text class="{{viewMode === 'tree' ? 'active' : ''}}" bindtap="onViewModeChange" data-mode="tree">树形</text>
+        <text class="{{viewMode === 'list' ? 'active' : ''}}" bindtap="onViewModeChange" data-mode="list">列表</text>
+      </view>
+      <text class="btn-manage" bindtap="onManageFamily">管理</text>
     </view>
   </view>
 
@@ -14,25 +17,78 @@
   <!-- 树形视图 -->
   <block wx:if="{{viewMode === 'tree' && !loading}}">
     <view class="tree-view">
-      <view wx:for="{{treeData}}" wx:key="id" class="tree-root">
-        <view class="root-card" bindtap="onMemberTap" data-id="{{item.id}}">
-          <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
-          <text class="member-name">{{item.name}}</text>
-          <text class="member-gen">第{{item.generation_num}}代</text>
+      <view wx:for="{{treeData}}" wx:for-item="root" wx:key="{{root.id}}" class="tree-root">
+        <!-- 根节点 -->
+        <view class="root-card" bindtap="onMemberTap" data-id="{{root.id}}">
+          <view class="card-avatar {{root.is_alive ? '' : 'avatar-deceased'}}">
+            <image wx:if="{{root.avatar_url}}" src="{{root.avatar_url}}" mode="aspectFill" class="avatar-img" />
+            <text wx:else>{{root.gender === 'M' ? '男' : root.gender === 'F' ? '女' : '其他'}}</text>
+          </view>
+          <view class="card-info">
+            <text class="member-name">{{root.name}}<text class="gen-tag" wx:if="{{root.generation_name}}">{{root.generation_name}}</text></text>
+            <view class="member-meta">
+              <text class="member-gen">第{{root.generation_num}}代</text>
+              <text class="{{root.is_alive ? 'status-alive' : 'status-deceased'}}">{{root.is_alive ? '在世' : '已故'}}</text>
+            </view>
+          </view>
         </view>
         <!-- 配偶 -->
-        <view wx:if="{{item.spouse}}" class="spouse-card" bindtap="onMemberTap" data-id="{{item.spouse.id}}">
-          <text class="member-gender">{{item.spouse.gender === 'M' ? '👨' : item.spouse.gender === 'F' ? '👩' : '👤'}}</text>
-          <text class="member-name">{{item.spouse.name}}</text>
+        <view wx:if="{{root.spouse}}" class="spouse-card" bindtap="onMemberTap" data-id="{{root.spouse.id}}">
+          <view class="card-avatar small {{root.spouse.is_alive ? '' : 'avatar-deceased'}}">
+            <image wx:if="{{root.spouse.avatar_url}}" src="{{root.spouse.avatar_url}}" mode="aspectFill" class="avatar-img" />
+            <text wx:else>{{root.spouse.gender === 'M' ? '男' : root.spouse.gender === 'F' ? '女' : '其他'}}</text>
+          </view>
+          <view class="card-info">
+            <text class="member-name">{{root.spouse.name}}</text>
+            <text class="{{root.spouse.is_alive ? 'status-alive' : 'status-deceased'}}">{{root.spouse.is_alive ? '在世' : '已故'}}</text>
+          </view>
         </view>
         <!-- 子节点 -->
-        <view wx:if="{{item.children.length > 0}}" class="children-container">
-          <view wx:for="{{item.children}}" wx:key="id" class="child-item" bindtap="onMemberTap" data-id="{{item.id}}">
+        <view wx:if="{{root._hasChildren}}" class="children-container">
+          <view wx:for="{{root.children}}" wx:for-item="child" wx:key="{{child.id}}" class="child-item" bindtap="onMemberTap" data-id="{{child.id}}">
             <view class="child-connector"></view>
             <view class="child-card">
-              <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
-              <text class="member-name">{{item.name}}</text>
-              <text class="member-gen">第{{item.generation_num}}代</text>
+              <view class="card-avatar small {{child.is_alive ? '' : 'avatar-deceased'}}">
+                <image wx:if="{{child.avatar_url}}" src="{{child.avatar_url}}" mode="aspectFill" class="avatar-img" />
+                <text wx:else>{{child.gender === 'M' ? '男' : child.gender === 'F' ? '女' : '其他'}}</text>
+              </view>
+              <view class="card-info">
+                <text class="member-name">{{child.name}}<text class="gen-tag" wx:if="{{child.generation_name}}">{{child.generation_name}}</text></text>
+                <view class="member-meta">
+                  <text class="member-gen">第{{child.generation_num}}代</text>
+                  <text class="{{child.is_alive ? 'status-alive' : 'status-deceased'}}">{{child.is_alive ? '在世' : '已故'}}</text>
+                </view>
+              </view>
+            </view>
+            <!-- 子节点配偶 -->
+            <view wx:if="{{child.spouse}}" class="spouse-card" bindtap="onMemberTap" data-id="{{child.spouse.id}}">
+              <view class="card-avatar small {{child.spouse.is_alive ? '' : 'avatar-deceased'}}">
+                <image wx:if="{{child.spouse.avatar_url}}" src="{{child.spouse.avatar_url}}" mode="aspectFill" class="avatar-img" />
+                <text wx:else>{{child.spouse.gender === 'M' ? '男' : child.spouse.gender === 'F' ? '女' : '其他'}}</text>
+              </view>
+              <view class="card-info">
+                <text class="member-name">{{child.spouse.name}}</text>
+                <text class="{{child.spouse.is_alive ? 'status-alive' : 'status-deceased'}}">{{child.spouse.is_alive ? '在世' : '已故'}}</text>
+              </view>
+            </view>
+            <!-- 孙节点 -->
+            <view wx:if="{{child._hasChildren}}" class="children-container">
+              <view wx:for="{{child.children}}" wx:for-item="gc" wx:key="{{gc.id}}" class="child-item" bindtap="onMemberTap" data-id="{{gc.id}}">
+                <view class="child-connector"></view>
+                <view class="child-card">
+                  <view class="card-avatar small {{gc.is_alive ? '' : 'avatar-deceased'}}">
+                    <image wx:if="{{gc.avatar_url}}" src="{{gc.avatar_url}}" mode="aspectFill" class="avatar-img" />
+                    <text wx:else>{{gc.gender === 'M' ? '男' : gc.gender === 'F' ? '女' : '其他'}}</text>
+                  </view>
+                  <view class="card-info">
+                    <text class="member-name">{{gc.name}}</text>
+                    <view class="member-meta">
+                      <text class="member-gen">第{{gc.generation_num}}代</text>
+                      <text class="{{gc.is_alive ? 'status-alive' : 'status-deceased'}}">{{gc.is_alive ? '在世' : '已故'}}</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
             </view>
           </view>
         </view>
@@ -40,33 +96,18 @@
     </view>
   </block>
 
-  <!-- 列表视图 -->
+  <!-- 列表视图：扁平化列表，按世代排序 -->
   <block wx:if="{{viewMode === 'list' && !loading}}">
     <view class="list-view">
-      <view class="tree-view">
-        <view wx:for="{{treeData}}" wx:key="id" class="tree-root">
-          <view class="root-card" bindtap="onMemberTap" data-id="{{item.id}}">
-            <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
-            <text class="member-name">{{item.name}}</text>
-            <text class="member-gen">第{{item.generation_num}}代</text>
-          </view>
-          <!-- 配偶 -->
-          <view wx:if="{{item.spouse}}" class="spouse-card" bindtap="onMemberTap" data-id="{{item.spouse.id}}">
-            <text class="member-gender">{{item.spouse.gender === 'M' ? '👨' : item.spouse.gender === 'F' ? '👩' : '👤'}}</text>
-            <text class="member-name">{{item.spouse.name}}</text>
-          </view>
-          <!-- 子节点 -->
-          <view wx:if="{{item.children.length > 0}}" class="children-container">
-            <view wx:for="{{item.children}}" wx:key="id" class="child-item" bindtap="onMemberTap" data-id="{{item.id}}">
-              <view class="child-connector"></view>
-              <view class="child-card">
-                <text class="member-gender">{{item.gender === 'M' ? '👨' : item.gender === 'F' ? '👩' : '👤'}}</text>
-                <text class="member-name">{{item.name}}</text>
-                <text class="member-gen">第{{item.generation_num}}代</text>
-              </view>
-            </view>
-          </view>
+      <view wx:for="{{flatListData}}" wx:key="{{item.id}}" class="list-item {{item.isSpouse ? 'list-item-spouse' : ''}} {{item.depth > 0 ? 'list-item-indent' : ''}}" bindtap="onMemberTap" data-id="{{item.id}}">
+        <text class="list-indent-bar" wx:if="{{item.depth > 0}}">{{item.depth > 0 ? '  ' : ''}}</text>
+        <view class="card-avatar tiny {{item.is_alive ? '' : 'avatar-deceased'}}">
+          <image wx:if="{{item.avatar_url}}" src="{{item.avatar_url}}" mode="aspectFill" class="avatar-img" />
+          <text wx:else>{{item.gender === 'M' ? '男' : item.gender === 'F' ? '女' : '其他'}}</text>
         </view>
+        <text class="member-name">{{item.name}}{{item.isSpouse ? '（配）' : ''}}</text>
+        <text class="member-gen">第{{item.generation_num}}代</text>
+        <text class="{{item.is_alive ? 'status-alive' : 'status-deceased'}}">{{item.is_alive ? '在世' : '已故'}}</text>
       </view>
     </view>
   </block>

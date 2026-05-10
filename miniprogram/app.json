@@ -4,7 +4,8 @@
     "pages/index/index",
     "pages/tree/tree",
     "pages/person/person",
-    "pages/add/add"
+    "pages/add/add",
+    "pages/family/family"
   ],
   "window": {
     "navigationBarTitleText": "家族宝谱",

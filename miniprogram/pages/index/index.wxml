@@ -5,13 +5,19 @@
   </view>
 
   <view class="content">
+    <!-- 加载中 -->
+    <view wx:if="{{isLoading && families.length === 0}}" class="loading-state">
+      <text class="loading-text">加载中...</text>
+    </view>
+
     <!-- 家族列表 -->
     <view wx:if="{{families.length > 0}}" class="family-list">
       <view wx:for="{{families}}" wx:key="id" class="family-card" bindtap="onFamilyTap" data-id="{{item.id}}" data-name="{{item.name}}">
         <view class="family-icon">📖</view>
         <view class="family-info">
           <text class="family-name">{{item.name}}</text>
-          <text class="family-meta">{{item.surname || ''}} · {{item.member_count || 0}} 人</text>
+          <text wx:if="{{item.hall_name}}" class="family-hall">堂号：{{item.hall_name}}</text>
+          <text class="family-meta">{{item.surname || ''}}氏 · {{item.member_count || 0}} 人</text>
         </view>
         <text class="arrow">›</text>
       </view>

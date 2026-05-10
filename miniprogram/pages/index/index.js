@@ -44,7 +44,13 @@ Page({
         this.setData({ families: cached, isDemo: false });
       } else {
         this.setData({
-          families: [{ id: 'demo_liu', name: '刘氏家族', surname: '刘', member_count: 11 }],
+          families: [{
+            id: 'demo_liu',
+            name: '田湖刘氏家族',
+            surname: '刘',
+            hall_name: '亲睦堂',
+            member_count: 11
+          }],
           isDemo: true
         });
       }

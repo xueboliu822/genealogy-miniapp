@@ -15,6 +15,18 @@
       <text class="form-label">姓氏</text>
       <input class="form-input" placeholder="如：李" value="{{surname}}" bindinput="onSurnameInput" />
     </view>
+    <view class="form-item">
+      <text class="form-label">堂号（选填）</text>
+      <input class="form-input" placeholder="如：亲睦堂" value="{{hall_name}}" bindinput="onHallNameInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">迁徙源流（选填）</text>
+      <textarea class="form-textarea" placeholder="如：从江西迁至湖南省宁乡市" value="{{migration_note}}" bindinput="onMigrationNoteInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">字辈诗（选填）</text>
+      <textarea class="form-textarea" placeholder="全支字辈诗" value="{{generation_poem}}" bindinput="onGenerationPoemInput" />
+    </view>
     <button class="btn-submit" bindtap="onSubmitFamily" loading="{{loading}}">创建家族</button>
   </view>
 
@@ -36,9 +48,26 @@
       <input class="form-input" type="number" placeholder="世代数字，如：3" value="{{generation_num}}" bindinput="onGenInput" />
     </view>
     <view class="form-item">
+      <text class="form-label">辈分字</text>
+      <input class="form-input" placeholder="根据字辈自动带出，如：世" value="{{generation_name}}" bindinput="onGenerationNameInput" />
+      <text class="form-hint">选择父亲后自动带出，可修改</text>
+    </view>
+    <view class="form-item">
       <text class="form-label">父亲</text>
       <picker mode="selector" range="{{fathers}}" range-key="name" bindchange="onFatherChange">
-        <view class="picker-value">{{selectedFather || '选择父亲（选填）'}}</view>
+        <view class="picker-value">{{selectedFather || '选择父亲（选填，自动带出世代和辈分）'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="form-label">母亲</text>
+      <picker mode="selector" range="{{mothers}}" range-key="name" bindchange="onMotherChange">
+        <view class="picker-value">{{selectedMother || '选择母亲（选填）'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="form-label">配偶</text>
+      <picker mode="selector" range="{{spouses}}" range-key="name" bindchange="onSpouseChange">
+        <view class="picker-value">{{selectedSpouse || '选择配偶（选填）'}}</view>
       </picker>
     </view>
     <view class="form-item">
@@ -46,8 +75,25 @@
       <input class="form-input" type="number" placeholder="如：1990" value="{{birth_year}}" bindinput="onBirthInput" />
     </view>
     <view class="form-item">
+      <text class="form-label">是否在世</text>
+      <radio-group bindchange="onIsAliveChange">
+        <label class="radio-item"><radio value="1" checked="{{is_alive === true}}" /> 在世</label>
+        <label class="radio-item"><radio value="0" checked="{{is_alive === false}}" /> 已故</label>
+      </radio-group>
+    </view>
+    <view wx:if="{{!is_alive}}" class="form-item">
+      <text class="form-label">去世年份</text>
+      <input class="form-input" type="number" placeholder="如：2020" value="{{death_year}}" bindinput="onDeathYearInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">居住地</text>
+      <picker mode="selector" range="{{places}}" range-key="name" bindchange="onPlaceChange">
+        <view class="picker-value">{{selectedPlace || '选择居住地（选填）'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
       <text class="form-label">简介</text>
-      <input class="form-input" placeholder="简单描述（选填）" value="{{bio}}" bindinput="onBioInput" />
+      <textarea class="form-textarea" placeholder="简单描述（选填）" value="{{bio}}" bindinput="onBioInput" />
     </view>
     <button class="btn-submit" bindtap="onSubmitPerson" loading="{{loading}}">添加成员</button>
   </view>

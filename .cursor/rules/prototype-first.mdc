@@ -1,0 +1,11 @@
+---
+description: 小程序改动前对齐 genealogy 仓库中的 HTML 原型
+globs: "miniprogram/**/*"
+alwaysApply: true
+---
+
+# 原型优先（族谱小程序）
+
+- 本仓库的页面与交互应与 **`Vibe-Coding-Projects/genealogy/prototype/`**（或你本地克隆的 `genealogy` 仓库同路径）中的 HTML 原型一致。
+- 新页面、主导航、表单字段：**先在 `genealogy` 的 `prototype/` 更新并通过确认**，再在本仓库实现。
+- 实现若有偏差，请回写原型与设计文档 `genealogy-design.md`。

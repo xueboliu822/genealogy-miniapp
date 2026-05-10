@@ -1,0 +1,113 @@
+<view class="container">
+  <view class="page-header">
+    <text class="page-title">{{family_name}} - 家族管理</text>
+  </view>
+
+  <!-- Tab切换 -->
+  <view class="tab-bar">
+    <text class="tab {{tab === 'info' ? 'active' : ''}}" bindtap="onTabChange" data-tab="info">基本信息</text>
+    <text class="tab {{tab === 'donations' ? 'active' : ''}}" bindtap="onTabChange" data-tab="donations">捐献榜单</text>
+  </view>
+
+  <!-- 基本信息 -->
+  <view wx:if="{{tab === 'info'}}" class="section">
+    <view class="info-card">
+      <view class="info-title">堂号与祠堂</view>
+      <view class="form-item">
+        <text class="form-label">堂号</text>
+        <input class="form-input" placeholder="如：陇西堂" value="{{hall_name}}" bindinput="onHallNameInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">祠堂位置</text>
+        <textarea class="form-textarea" placeholder="描述祠堂所在位置" value="{{hall_location}}" bindinput="onHallLocationInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">迁徙源流</text>
+        <textarea class="form-textarea" placeholder="如：从江西迁至湖南省宁乡市" value="{{migration_note}}" bindinput="onMigrationNoteInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">字辈诗</text>
+        <textarea class="form-textarea auto-height" placeholder="全支字辈诗，逗号或句读分隔" value="{{generation_poem}}" bindinput="onGenerationPoemInput" />
+      </view>
+      <button class="btn-save" bindtap="onSaveHall">保存信息</button>
+    </view>
+  </view>
+
+  <!-- 捐献榜单 -->
+  <view wx:if="{{tab === 'donations'}}" class="section">
+    <!-- 添加捐献记录 -->
+    <view class="add-donation-card">
+      <view class="info-title">添加捐献记录</view>
+      <view class="donation-type-row">
+        <text class="type-label">榜单：</text>
+        <view class="type-btns">
+          <text class="type-btn {{newDonation.type === 'hall' ? 'active' : ''}}" bindtap="onDonationTypeChange" data-type="hall">祠堂捐献</text>
+          <text class="type-btn {{newDonation.type === 'qingming' ? 'active' : ''}}" bindtap="onDonationTypeChange" data-type="qingming">清明祭祖</text>
+          <text class="type-btn {{newDonation.type === 'other' ? 'active' : ''}}" bindtap="onDonationTypeChange" data-type="other">其他贡献</text>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">姓名</text>
+        <input class="form-input" placeholder="捐献人姓名" value="{{newDonation.name}}" bindinput="onDonationNameInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">金额/贡献</text>
+        <input class="form-input" placeholder="如：50000元" value="{{newDonation.amount}}" bindinput="onDonationAmountInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">日期</text>
+        <input class="form-input" placeholder="如：2024-01-15" value="{{newDonation.date}}" bindinput="onDonationDateInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">说明</text>
+        <input class="form-input" placeholder="备注说明" value="{{newDonation.note}}" bindinput="onDonationNoteInput" />
+      </view>
+      <button class="btn-add" bindtap="onAddDonation">添加记录</button>
+    </view>
+
+    <!-- 祠堂捐献榜 -->
+    <view class="donation-list" wx:if="{{parseJson(mgmt.hall_donations).length > 0}}">
+      <view class="donation-list-title">🏛 祠堂捐献榜</view>
+      <view wx:for="{{parseJson(mgmt.hall_donations)}}" wx:key="index" class="donation-item">
+        <view class="donation-left">
+          <text class="donation-name">{{item.name}}</text>
+          <text class="donation-note">{{item.note}}</text>
+        </view>
+        <view class="donation-right">
+          <text class="donation-amount">{{item.amount}}</text>
+          <text class="donation-date">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 清明祭祖捐献榜 -->
+    <view class="donation-list" wx:if="{{parseJson(mgmt.qingming_donations).length > 0}}">
+      <view class="donation-list-title">🌸 清明祭祖捐献榜</view>
+      <view wx:for="{{parseJson(mgmt.qingming_donations)}}" wx:key="index" class="donation-item">
+        <view class="donation-left">
+          <text class="donation-name">{{item.name}}</text>
+          <text class="donation-note">{{item.note}}</text>
+        </view>
+        <view class="donation-right">
+          <text class="donation-amount">{{item.amount}}</text>
+          <text class="donation-date">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 其他贡献榜 -->
+    <view class="donation-list" wx:if="{{parseJson(mgmt.other_honors).length > 0}}">
+      <view class="donation-list-title">⭐ 其他重大贡献</view>
+      <view wx:for="{{parseJson(mgmt.other_honors)}}" wx:key="index" class="donation-item">
+        <view class="donation-left">
+          <text class="donation-name">{{item.name}}</text>
+          <text class="donation-note">{{item.note}}</text>
+        </view>
+        <view class="donation-right">
+          <text class="donation-amount">{{item.amount}}</text>
+          <text class="donation-date">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

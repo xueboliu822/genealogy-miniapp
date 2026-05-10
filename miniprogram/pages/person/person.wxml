@@ -1,33 +1,79 @@
 <view class="container">
   <!-- 查看模式 -->
   <block wx:if="{{!isEditing}}">
+    <!-- 头像区域 -->
+    <view class="avatar-section" bindtap="onChooseAvatar">
+      <view class="avatar {{!person.is_alive ? 'avatar-deceased' : ''}}">
+        <image wx:if="{{person.avatar_url}}" src="{{person.avatar_url}}" mode="aspectFill" class="avatar-img" />
+        <text wx:else class="avatar-placeholder">{{person.gender === 'M' ? '👨' : person.gender === 'F' ? '👩' : '👤'}}</text>
+      </view>
+      <text class="avatar-tip">点击更换头像</text>
+    </view>
+
     <view class="person-card">
-      <view class="avatar">{{person.gender === 'M' ? '👨' : person.gender === 'F' ? '👩' : '👤'}}</view>
-      <text class="person-name">{{person.name}}</text>
+      <view class="person-name-row">
+        <text class="person-name">{{person.name}}</text>
+        <text wx:if="{{person.generation_name}}" class="gen-name">· {{person.generation_name}}字辈</text>
+      </view>
       <text class="person-gen">第 {{person.generation_num}} 代</text>
+      <view class="life-status">
+        <text class="{{person.is_alive ? 'status-alive' : 'status-deceased'}}">
+          {{person.is_alive ? '🟢 在世' : '⚫ 已故'}}
+        </text>
+        <text wx:if="{{person.birth_year}}" class="life-year">{{person.birth_year}} 年生</text>
+        <text wx:if="{{!person.is_alive && person.death_year}}" class="life-year">{{person.death_year}} 年逝</text>
+      </view>
     </view>
 
     <view class="info-list">
-      <view class="info-item">
+      <view class="info-item" wx:if="{{person.gender}}">
         <text class="info-label">性别</text>
         <text class="info-value">{{person.gender === 'M' ? '男' : person.gender === 'F' ? '女' : '其他'}}</text>
       </view>
       <view class="info-item" wx:if="{{person.birth_year}}">
         <text class="info-label">出生年份</text>
-        <text class="info-value">{{person.birth_year}}</text>
+        <text class="info-value">{{person.birth_year}} 年</text>
+      </view>
+      <view class="info-item" wx:if="{{!person.is_alive && person.death_year}}">
+        <text class="info-label">去世年份</text>
+        <text class="info-value">{{person.death_year}} 年</text>
+      </view>
+      <view class="info-item" wx:if="{{person.father_id}}">
+        <text class="info-label">父亲</text>
+        <text class="info-value">已设置</text>
+      </view>
+      <view class="info-item" wx:if="{{person.mother_id}}">
+        <text class="info-label">母亲</text>
+        <text class="info-value">已设置</text>
+      </view>
+      <view class="info-item" wx:if="{{person.spouse_id}}">
+        <text class="info-label">配偶</text>
+        <text class="info-value">已设置</text>
       </view>
       <view class="info-item" wx:if="{{person.bio}}">
         <text class="info-label">简介</text>
         <text class="info-value">{{person.bio}}</text>
       </view>
-      <view class="info-item" wx:if="{{person.father_name}}">
-        <text class="info-label">父亲</text>
-        <text class="info-value">{{person.father_name}}</text>
+    </view>
+
+    <!-- 家族评价 -->
+    <view class="eval-section">
+      <view class="eval-header">
+        <text class="eval-title">家族评价</text>
+        <text class="eval-count">{{evaluations.length}} 条</text>
+      </view>
+      <view wx:for="{{evaluations}}" wx:key="id" class="eval-item">
+        <text class="eval-content">{{item.content}}</text>
+        <text class="eval-date">{{item.created_at}}</text>
+      </view>
+      <view class="eval-input-row">
+        <input class="eval-input" placeholder="添加评价..." value="{{newEvaluation}}" bindinput="onEvaluationInput" />
+        <button class="eval-btn" bindtap="onSubmitEvaluation">发表</button>
       </view>
     </view>
 
     <view class="actions">
-      <button class="btn-edit" bindtap="onEdit">编辑</button>
+      <button class="btn-edit" bindtap="onEdit">编辑信息</button>
     </view>
   </block>
 
@@ -35,38 +81,63 @@
   <block wx:if="{{isEditing}}">
     <view class="edit-form">
       <view class="form-title">编辑成员信息</view>
-
       <view class="form-item">
         <text class="form-label">姓名</text>
         <input class="form-input" value="{{editForm.name}}" bindinput="onNameInput" placeholder="请输入姓名" />
       </view>
-
       <view class="form-item">
         <text class="form-label">性别</text>
         <picker mode="selector" range="{{['男', '女', '其他']}}" bindchange="onGenderChange">
-          <view class="form-picker">
-            {{editForm.gender === 'M' ? '男' : editForm.gender === 'F' ? '女' : '其他'}}
-          </view>
+          <view class="form-picker">{{editForm.gender === 'M' ? '男' : editForm.gender === 'F' ? '女' : '其他'}}</view>
         </picker>
       </view>
-
       <view class="form-item">
         <text class="form-label">世代</text>
         <picker mode="selector" range="{{[1,2,3,4,5,6,7,8,9,10]}}" bindchange="onGenerationChange">
           <view class="form-picker">第 {{editForm.generation_num}} 代</view>
         </picker>
       </view>
-
+      <view class="form-item">
+        <text class="form-label">辈分字</text>
+        <input class="form-input" value="{{editForm.generation_name}}" bindinput="onGenerationNameInput" placeholder="如：世" />
+      </view>
       <view class="form-item">
         <text class="form-label">出生年份</text>
         <input class="form-input" type="number" value="{{editForm.birth_year}}" bindinput="onBirthYearInput" placeholder="选填" />
       </view>
-
+      <view class="form-item">
+        <text class="form-label">是否在世</text>
+        <radio-group bindchange="onIsAliveChange">
+          <label class="radio-item"><radio value="1" checked="{{editForm.is_alive === true}}" /> 在世</label>
+          <label class="radio-item"><radio value="0" checked="{{editForm.is_alive === false}}" /> 已故</label>
+        </radio-group>
+      </view>
+      <view wx:if="{{!editForm.is_alive}}" class="form-item">
+        <text class="form-label">去世年份</text>
+        <input class="form-input" type="number" value="{{editForm.death_year}}" bindinput="onDeathYearInput" placeholder="如：2020" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">居住地</text>
+        <picker mode="selector" range="{{places}}" range-key="name" bindchange="onPlaceChange">
+          <view class="form-picker">{{editForm.place_name || '未设置'}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">父亲</text>
+        <picker mode="selector" range="{{fathers}}" range-key="name" bindchange="onFatherChange">
+          <view class="form-picker">{{editForm.father_name || '未设置'}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">母亲</text>
+        <picker mode="selector" range="{{mothers}}" range-key="name" bindchange="onMotherChange">
+          <view class="form-picker">{{editForm.mother_name || '未设置'}}</view>
+        </picker>
+      </view>
       <view class="form-item">
         <text class="form-label">简介</text>
         <textarea class="form-textarea" value="{{editForm.bio}}" bindinput="onBioInput" placeholder="选填" />
       </view>
-
       <view class="form-actions">
         <button class="btn-cancel" bindtap="onCancelEdit">取消</button>
         <button class="btn-save" bindtap="onSave">保存</button>

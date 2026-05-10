@@ -8,8 +8,11 @@
 .family-icon { font-size: 32px; margin-right: 14px; }
 .family-info { flex: 1; }
 .family-name { display: block; font-size: 17px; font-weight: bold; color: #333; margin-bottom: 3px; }
+.family-hall { display: block; font-size: 13px; color: #8B4513; margin-bottom: 2px; }
 .family-meta { display: block; font-size: 13px; color: #999; }
 .arrow { font-size: 22px; color: #ccc; }
+.loading-state { text-align: center; padding: 60px 20px; }
+.loading-text { font-size: 15px; color: #999; }
 .empty-state { text-align: center; padding: 60px 20px; }
 .empty-icon { display: block; font-size: 60px; margin-bottom: 15px; }
 .empty-text { display: block; font-size: 18px; color: #666; margin-bottom: 8px; }
