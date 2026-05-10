@@ -4,14 +4,18 @@
 
 | 文件 | 说明 |
 |------|------|
-| **`index.html`** | 小程序 UI v2：首页、族谱树、家族文化、创建家族 |
+| **`index.html`** | **UI 方案总览**：三选一进入完整手机框原型 |
+| **`variants/v1-warm-paper.html`** | 方案一：暖纸墨线（褐红主色，树 Tab 为占位） |
+| **`variants/v2-celadon.html`** | 方案二：青黛文博（冷绿主色） |
+| **`variants/v3-vertical-tree.html`** | 方案三：暖纸 + **垂直世系树**组件 |
 | **`shared-styles.css`** | 色板与圆角变量，实现 WXSS 时可对照 |
 
 ## 预览
 
 ```bash
-# 本仓库根目录下
 open prototype/index.html
+# 再点击方案卡片，或直达：
+open prototype/variants/v3-vertical-tree.html
 ```
 
 ## 管理后台原型

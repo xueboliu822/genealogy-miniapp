@@ -6,7 +6,7 @@ alwaysApply: true
 
 # 原型优先（族谱小程序）
 
-- 微信小程序的 HTML 原型在本仓库 **`prototype/index.html`**（与 `miniprogram/` 并列），样式变量见 **`prototype/shared-styles.css`**。
-- 新页面、主导航、表单字段：**先更新 `prototype/` 并通过确认**，再改 `miniprogram/`。
+- 微信小程序的 HTML 原型在本仓库 **`prototype/`**：总览 **`index.html`**，多方案在 **`prototype/variants/`**（如 `v3-vertical-tree.html`）。样式变量见 **`shared-styles.css`**。
+- 新页面、主导航、表单字段：**先更新对应 variant 或总览并通过确认**，再改 `miniprogram/`。
 - 管理后台原型在 **`genealogy` 仓库** 的 `prototype/admin.html`；参数与堂号类需求需与之一致。
 - 实现若有偏差，请回写 `prototype/` 与 `genealogy/genealogy-design.md`。
