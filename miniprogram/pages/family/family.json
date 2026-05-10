@@ -1,4 +1,6 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "家族管理"
+  "navigationBarTitleText": "家族文化",
+  "navigationBarBackgroundColor": "#8B4513",
+  "navigationBarTextStyle": "white"
 }

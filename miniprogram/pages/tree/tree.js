@@ -144,6 +144,7 @@ Page({
   },
 
   onManageFamily() {
-    wx.navigateTo({ url: `/pages/family/family?family_id=${this.data.family_id}&family_name=${this.data.family_name}` });
+    const name = encodeURIComponent(this.data.family_name || '');
+    wx.navigateTo({ url: `/pages/family/family?family_id=${this.data.family_id}&family_name=${name}` });
   }
 });

@@ -82,4 +82,12 @@ module.exports = {
   getSystemParams: (familyId) => request(`/families/${familyId}/system-params`, 'GET'),
   updateSystemParam: (familyId, key, value) =>
     request(`/families/${familyId}/system-params`, 'PUT', { param_key: key, param_value: String(value) }),
+
+  /** 追加捐献记录（owner/admin） */
+  addDonationRecord: (familyId, body) =>
+    request(`/families/${familyId}/management/donations`, 'POST', body),
+
+  /** 家族活动动态 */
+  listFamilyMoments: (familyId) => request(`/families/${familyId}/moments`, 'GET'),
+  createFamilyMoment: (familyId, body) => request(`/families/${familyId}/moments`, 'POST', body),
 };
