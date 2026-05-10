@@ -22,6 +22,10 @@ open prototype/variants/v3-vertical-tree.html
 
 后端/运营用的 **`admin.html`** 仍在 **`genealogy`** 仓库的 `prototype/` 下。若本地将 `genealogy` 与 `genealogy-miniapp` 放在同一父目录（例如 `Vibe-Coding-Projects/`），可从本页顶部链接直接打开；否则请手动打开 `genealogy/prototype/admin.html`。
 
+## 捐献榜单（原型）
+
+「家族文化 → 捐献榜单」按 **活动/项目** 分组（项目名、日期、总额 + 宗亲明细），与 `genealogy-design.md` **§13.5.2** 一致。
+
 ## 流程约定
 
 先确认本目录 HTML，再改 `miniprogram/` 下的 WXML/WXSS/JS。详见主设计文档 `genealogy/genealogy-design.md` §14.3。
