@@ -57,6 +57,10 @@ module.exports = {
   updatePerson: (id, data) => request(`/persons/${id}`, 'PUT', data),
   getPersons: (familyId) => request(`/families/${familyId}/persons`, 'GET'),
   getFamilyTree: (id) => request(`/families/${id}/tree`, 'GET'),
+  /** 当前用户在本家族绑定的谱员节点；未绑定则 404 */
+  getMyBoundPerson: (familyId) => request(`/families/${familyId}/me/person`, 'GET'),
+  bindPersonWechat: (personId) => request(`/persons/${personId}/wechat-bind`, 'POST'),
+  unbindPersonWechat: (personId) => request(`/persons/${personId}/wechat-bind`, 'DELETE'),
 
   // 头像
   updateAvatar: (personId, avatarUrl) => request(`/persons/${personId}/avatar`, 'POST', { avatar_url: avatarUrl }),
