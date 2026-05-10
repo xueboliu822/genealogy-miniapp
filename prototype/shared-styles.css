@@ -20,3 +20,64 @@
   --font-sans: "DM Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
 }
+
+/* 捐献榜单：按活动分组（HTML 原型，可与 WXSS 对齐） */
+.donations-intro {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: 0 0 14px;
+}
+.donation-campaign {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+.donation-campaign.secondary { opacity: 0.96; }
+.campaign-head {
+  padding: 14px 16px;
+  background: linear-gradient(180deg, var(--paper-deep) 0%, #fff 100%);
+  border-bottom: 1px solid var(--line);
+}
+.campaign-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.campaign-meta {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+.campaign-meta strong { color: var(--accent); font-weight: 700; }
+.campaign-entries {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+.campaign-entries li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--line);
+}
+.campaign-entries li:last-child { border-bottom: none; }
+.campaign-entries li.more {
+  justify-content: center;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+.campaign-entries .who { font-weight: 500; color: var(--ink); }
+.campaign-entries .amt { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+.donations-foot {
+  font-size: 0.72rem;
+  color: #a8a29e;
+  margin: 16px 0 0;
+  line-height: 1.45;
+}

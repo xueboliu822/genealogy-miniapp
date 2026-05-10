@@ -569,14 +569,30 @@
             <button type="button" class="btn btn-primary" style="opacity:0.45" disabled>保存（实现阶段）</button>
           </div>
           <div class="panel" id="panel-donations">
-            <div class="family-card" style="cursor:default">
-              <div class="emblem" style="font-size:0.9rem">捐</div>
-              <div class="body">
-                <div class="name">刘某某</div>
-                <div class="meta">50,000 元 · 2024-01-15 · 祠堂重建</div>
+            <p class="donations-intro">按<strong>活动/项目</strong>展示：每项含日期、捐款总额，下列宗亲明细。</p>
+            <div class="donation-campaign">
+              <div class="campaign-head">
+                <div class="campaign-title">2026清明祭祖</div>
+                <div class="campaign-meta">日期 · 2026/4/4　　捐款总额 · <strong>98,000 元</strong></div>
               </div>
+              <ul class="campaign-entries">
+                <li><span class="who">刘三</span><span class="amt">500 元</span></li>
+                <li><span class="who">刘铁</span><span class="amt">3,000 元</span></li>
+                <li><span class="who">刘建国</span><span class="amt">15,000 元</span></li>
+                <li class="more">…</li>
+              </ul>
             </div>
-            <p style="font-size:0.8rem;color:var(--ink-soft)">榜单数据结构与 <code>/management/donations</code> 一致。</p>
+            <div class="donation-campaign secondary">
+              <div class="campaign-head">
+                <div class="campaign-title">祠堂修缮基金 · 2025</div>
+                <div class="campaign-meta">日期 · 2025/10/1　　捐款总额 · <strong>126,000 元</strong></div>
+              </div>
+              <ul class="campaign-entries">
+                <li><span class="who">刘某某</span><span class="amt">50,000 元</span></li>
+                <li><span class="who">刘志强</span><span class="amt">30,000 元</span></li>
+              </ul>
+            </div>
+            <p class="donations-foot">数据结构见 genealogy-design.md §13.5.2（campaigns + entries）。</p>
           </div>
         </div>
       </section>
