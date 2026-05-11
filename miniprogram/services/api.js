@@ -90,4 +90,10 @@ module.exports = {
   /** 家族活动动态 */
   listFamilyMoments: (familyId) => request(`/families/${familyId}/moments`, 'GET'),
   createFamilyMoment: (familyId, body) => request(`/families/${familyId}/moments`, 'POST', body),
+  toggleMomentLike: (familyId, momentId) =>
+    request(`/families/${familyId}/moments/${momentId}/like`, 'POST'),
+  listMomentComments: (familyId, momentId) =>
+    request(`/families/${familyId}/moments/${momentId}/comments`, 'GET'),
+  createMomentComment: (familyId, momentId, body) =>
+    request(`/families/${familyId}/moments/${momentId}/comments`, 'POST', body),
 };

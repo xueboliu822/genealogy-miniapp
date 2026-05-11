@@ -1,4 +1,5 @@
 .page-tree { min-height: 100vh; background: #f5f0eb; padding-bottom: 120rpx; }
+.page-tree.theme-celadon { background: #edf1f0; }
 
 .tree-header {
   background: #8B4513;
@@ -6,6 +7,9 @@
   padding: 40rpx 32rpx 32rpx;
   border-radius: 0 0 40rpx 40rpx;
   margin-bottom: 24rpx;
+}
+.theme-celadon .tree-header {
+  background: linear-gradient(180deg, #1a4a40 0%, #2a6b5b 100%);
 }
 .tree-title { display: block; font-size: 44rpx; font-weight: bold; }
 .tree-count { display: block; font-size: 26rpx; opacity: 0.85; margin-top: 8rpx; }
@@ -155,3 +159,21 @@
   font-size: 32rpx;
 }
 .btn-add::after { border: none; }
+
+/* 青黛：世系线、根节点、底栏按钮 */
+.theme-celadon .vt-node.vt-root {
+  border-color: #2a6b5b !important;
+  color: #2a6b5b !important;
+}
+.theme-celadon .vt-stem,
+.theme-celadon .vt-fork::before,
+.theme-celadon .vt-fork::after {
+  background: #2a6b5b !important;
+  opacity: 0.55;
+}
+.theme-celadon .btn-add {
+  background: #2a6b5b;
+}
+.theme-celadon .list-item-mp .member-gen {
+  color: #2a6b5b;
+}
